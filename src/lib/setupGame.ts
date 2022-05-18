@@ -21,6 +21,11 @@ let asteroids: Asteroid[] = [];
 
 export const finishedLoading = writable(false);
 
+/**
+ * It sets up the game
+ * @param {HTMLCanvasElement} node - HTMLCanvasElement - The canvas element that we're going to be
+ * drawing on.
+ */
 export default function setupGame(node: HTMLCanvasElement) {
     ctx = node.getContext('2d') as CanvasRenderingContext2D;
     canvas = node;
@@ -45,6 +50,10 @@ export default function setupGame(node: HTMLCanvasElement) {
     renderGame();
 }
 
+/**
+ * We're checking for collisions between the ship and asteroids, and between bullets and asteroids. If
+ * there's a collision, we're either resetting the ship or destroying the asteroid
+ */
 function renderGame() {
     ship.movingForward = (keys[ArrowKeys.up as unknown as number] || keys[KBKeys.up  as unknown as number]);
 
@@ -157,6 +166,7 @@ function renderGame() {
     requestAnimationFrame(renderGame);
 }
 
+/* It creates a bullet object that moves in the direction of the ship's nose */
 export class Bullet {
     visible = true;
     x = ship.noseX;
@@ -169,21 +179,38 @@ export class Bullet {
     velY = 0;
 
     radians: number;
+    /**
+     * The constructor function is a special function that is called when an object is created from a
+     * class
+     * @param {number} angle - The angle of the rotation in degrees.
+     */
     constructor(angle: number) {
         this.angle = angle;
         this.radians = this.angle / Math.PI * 180;
     }
 
+    /**
+     * "Move the particle in the direction of its radians, at a speed of speed."
+     * 
+     * The first line of the function subtracts the cosine of the particle's radians from the
+     * particle's x position. The second line subtracts the sine of the particle's radians from the
+     * particle's y position
+     */
     update() {
         this.x -= Math.cos(this.radians) * this.speed;
         this.y -= Math.sin(this.radians) * this.speed;
     }
+    /**
+     * Draw a white rectangle at the x and y coordinates of the object, with the width and height of
+     * the object.
+     */
     draw() {
         ctx.fillStyle = 'white';
         ctx.fillRect(this.x, this.y, this.width, this.height);
     }
 }
 
+/* The Asteroid class is used to create a new instance of the Asteroid class */
 class Asteroid {
     visible = true;
     x: number;
@@ -195,6 +222,15 @@ class Asteroid {
     collisionRadius: number;
     level: number;
     radians = this.angle / Math.PI * 180;
+    /**
+     * The constructor function is used to create a new instance of the class
+     * @param {number} x - number = Math.floor(Math.random() * canvasWidth),
+     * @param {number} y - number = Math.floor(Math.random() * canvasHeight),
+     * @param [radius=50] - The radius of the circle.
+     * @param [level=1] - The level of the enemy. This is used to determine the color of the enemy.
+     * @param [collisionRadius=46] - The radius of the circle that will be used to detect collisions.
+     * @param [speed=1.5] - The speed at which the enemy moves.
+     */
     constructor(
         x: number = Math.floor(Math.random() * canvasWidth),
         y: number = Math.floor(Math.random() * canvasHeight),
@@ -211,6 +247,10 @@ class Asteroid {
         this.speed = speed;
     }
 
+    /**
+     * If the x or y position of the particle is less than the radius, or greater than the width or
+     * height of the canvas, then set the x or y position to the opposite side of the canvas
+     */
     update() {
 
         this.x += Math.cos(this.radians) * this.speed;
@@ -229,6 +269,10 @@ class Asteroid {
         }
         
     }
+    /**
+     * We're drawing a hexagon by drawing 6 lines from the center of the hexagon to the edge of the
+     * hexagon
+     */
     draw() {
         ctx.beginPath();
         const vertAngle = ((Math.PI * 2) / 6);
@@ -242,6 +286,9 @@ class Asteroid {
     }
 }
 
+/**
+ * We're going to draw a triangle for each life the player has left
+ */
 function drawLifeShips() {
     let startX = canvasWidth / 2;
     const startY = 10;

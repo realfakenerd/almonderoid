@@ -1,6 +1,7 @@
 import { Bullet, ship } from "./setupGame";
 import type Ship from "./ship";
 
+/* Creating an enum of the arrow keys. */
 export const enum ArrowKeys {
     up = 'ArrowUp',
     left = 'ArrowLeft',
@@ -8,6 +9,7 @@ export const enum ArrowKeys {
     shoot = 's'
 }
 
+/* Creating an enum of the keyboard keys. */
 export const enum KBKeys {
     up = 'w',
     left = 'a',
@@ -15,6 +17,7 @@ export const enum KBKeys {
     shoot = 's'
 }
 
+/* An interface that is used to type the function print. */
 interface PrintOptions {
     positionX: number;
     positionY: number;
@@ -29,6 +32,11 @@ export let bullets: Bullet[] = [];
 export const handleKeydown = (e: KeyboardEvent) => {    
     keys[(e as any).key] = true;
 };
+/**
+ * We're adding a new bullet to the bullets array, and we're using the ship's angle to determine the
+ * direction of the bullet
+ * @param {KeyboardEvent} e - KeyboardEvent - this is the event that is passed to the function.
+ */
 export const handleKeyup = (e: KeyboardEvent) => {
     keys[(e as any).key] = false;
     if (e.key === ArrowKeys.shoot) {
@@ -37,6 +45,10 @@ export const handleKeyup = (e: KeyboardEvent) => {
 };
 
 
+/**
+ * It resets the ship's position and velocity to the center of the screen and zero, respectively
+ * @param {Ship} ship - The ship object that we want to reset.
+ */
 export function resetShip(ship: Ship) {
     ship.x = canvasWidth / 2;
     ship.y = canvasHeight / 2;
@@ -44,6 +56,13 @@ export function resetShip(ship: Ship) {
     ship.velY = 0;
 }
 
+/**
+ * It takes a canvas context, a string, and an object with three properties, and it draws the string on
+ * the canvas
+ * @param {CanvasRenderingContext2D} ctx - CanvasRenderingContext2D - The context of the canvas.
+ * @param {string} text - The text to be printed
+ * @param {PrintOptions}  - CanvasRenderingContext2D - The context of the canvas.
+ */
 export function print(ctx: CanvasRenderingContext2D, text: string, { positionX, positionY, size }: PrintOptions) {
     ctx.fillStyle = 'white';
     ctx.font = `${size || '21px'} Arial`;
