@@ -1,34 +1,46 @@
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 import { circleCollision } from './collisionSystem';
+import { highScore, score } from './stores/score';
 import {
-	ArrowKeys,
 	bullets,
 	canvasHeight,
 	canvasWidth,
 	handleKeydown,
 	handleKeyup,
-	KBKeys,
 	keys,
-	print,
 	resetShip
 } from './utils';
+
+/* Creating an enum of the arrow keys. */
+export const enum ArrowKeys {
+	up = 'ArrowUp',
+	left = 'ArrowLeft',
+	right = 'ArrowRight',
+	shoot = 's'
+}
+
+/* Creating an enum of the keyboard keys. */
+export const enum KBKeys {
+	up = 'w',
+	left = 'a',
+	right = 'd',
+	shoot = 's'
+}
 
 export let ship: Ship;
 export let canvas: HTMLCanvasElement;
 export let ctx: CanvasRenderingContext2D;
-
-export const score = writable(0);
-export const highScore = writable(0);
 
 let simpleScore = 0;
 const localStorageName = 'HighScore';
 
 const maxAsteroids = 4;
 
-let lives = 3;
+export const lives = writable(3);
+
 let asteroids: Asteroid[] = [];
 
-export const finishedLoading = writable(false);
+export const isGameOver = writable(false);
 
 /**
  * We're checking for collisions between the ship and asteroids, and between bullets and asteroids. If
@@ -47,22 +59,18 @@ export const finishedLoading = writable(false);
 
 	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
-	if (lives <= 0) {
+	if (get(lives) <= 0) {
 		document.body.removeEventListener('keydown', handleKeydown);
 		document.body.removeEventListener('keyup', handleKeyup);
 
 		ship.visible = false;
 
-		print(ctx, 'GAME OVER', {
-			positionX: canvasWidth / 2 - 150,
-			positionY: canvasHeight / 2,
-			size: '50px'
-		});
+		isGameOver.set(true)
 	}
 
 	if (asteroids.length === 0) {
 		resetShip(ship);
-		lives++;
+		lives.update(val => val+= 1);
 		let i = 0;
 		for (i; i < maxAsteroids; i++) {
 			const asteroid = new Asteroid();
@@ -70,8 +78,6 @@ export const finishedLoading = writable(false);
 			asteroids = [asteroid, ...asteroids];
 		}
 	}
-
-	drawLifeShips();
 
 	if (asteroids.length !== 0) {
 		let k = 0;
@@ -87,7 +93,7 @@ export const finishedLoading = writable(false);
 				)
 			) {
 				resetShip(ship);
-				lives -= 1;
+				lives.update(val=>val-=1);
 			}
 		}
 	}
@@ -110,14 +116,16 @@ export const finishedLoading = writable(false);
 					if (asteroids[l].level === 1) {
 						asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 25, 2, 22, 2));
 						asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 25, 2, 22, 2));
+						score.update(val => val += 20)
 					} else if (asteroids[l].level === 2) {
 						asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 15, 3, 12, 2.5));
 						asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 15, 3, 12, 2.5));
+						score.update(val => val += 30)
 					}
 					asteroids.splice(l, 1);
 					bullets.splice(m, 1);
 					score.update((val) => {
-						val += 20;
+						val += 15;
 						simpleScore = val;
 						return val;
 					});
@@ -131,15 +139,15 @@ export const finishedLoading = writable(false);
 	if (ship.visible) {
 		ship.update();
 		ship.draw();
-	}
-
-	if (bullets.length !== 0) {
-		let i = 0;
-		for (i; i < bullets.length; i++) {
-			bullets[i].update();
-			bullets[i].draw();
+		if (bullets.length !== 0) {
+			let i = 0;
+			for (i; i < bullets.length; i++) {
+				bullets[i].update();
+				bullets[i].draw();
+			}
 		}
 	}
+
 
 	if (asteroids.length !== 0) {
 		let i = 0;
@@ -165,7 +173,7 @@ export default function setupGame(node: HTMLCanvasElement) {
 	ctx = node.getContext('2d') as CanvasRenderingContext2D;
 	canvas = node;
 
-	ship = new Ship(node, ctx as CanvasRenderingContext2D);
+	ship = new Ship();
 
 	let i = 0;
 	for (i; i < maxAsteroids; i++) {
@@ -180,8 +188,6 @@ export default function setupGame(node: HTMLCanvasElement) {
 	} else {
 		highScore.set(0);
 	}
-
-	finishedLoading.set(true);
 	renderGame();
 }
 
@@ -226,7 +232,7 @@ export class Bullet {
 	 * the object.
 	 */
 	draw() {
-		ctx.fillStyle = 'white';
+		ctx.fillStyle = '#fe3637';
 		ctx.fillRect(this.x, this.y, this.width, this.height);
 	}
 }
@@ -293,9 +299,9 @@ class Asteroid {
 	 * hexagon
 	 */
 	draw() {
+		ctx.strokeStyle = this.strokeColor;
 		ctx.beginPath();
 		const vertAngle = (Math.PI * 2) / 6;
-
 		let i = 0;
 		for (i; i < 6; i++) {
 			ctx.lineTo(
@@ -305,32 +311,6 @@ class Asteroid {
 		}
 		ctx.closePath();
 		ctx.stroke();
-	}
-}
-
-/**
- * We're going to draw a triangle for each life the player has left
- */
-function drawLifeShips() {
-	let startX = canvasWidth / 2;
-	const startY = 10;
-	const points: [[number, number], [number, number]] = [
-		[9, 9],
-		[-9, 9]
-	];
-	ctx.strokeStyle = 'white';
-
-	let i = 0;
-	for (i; i < lives; i++) {
-		ctx.beginPath();
-		ctx.moveTo(startX, startY);
-		let j = 0;
-		for (j; j < points.length; j++) {
-			ctx.lineTo(startX + points[j][0], startY + points[j][1]);
-		}
-		ctx.closePath();
-		ctx.stroke();
-		startX -= 30;
 	}
 }
 
@@ -347,24 +327,9 @@ export class Ship {
 	rotateSpeed = 0.001;
 	radius = 15;
 	angle = 0;
-	strokeColor = 'white';
+	strokeColor = '#0978d2';
 	noseX = canvasWidth / 2 + 15;
 	noseY = canvasHeight / 2;
-
-	canvas: HTMLCanvasElement;
-	ctx: CanvasRenderingContext2D;
-
-	/**
-	 * The constructor function is a special function that is called when an object is created from a
-	 * class
-	 * @param {HTMLCanvasElement} canvas - The canvas element that we're going to be drawing on.
-	 * @param {CanvasRenderingContext2D} ctx - CanvasRenderingContext2D - This is the context of the
-	 * canvas.
-	 */
-	constructor(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
-		this.canvas = canvas;
-		this.ctx = ctx;
-	}
 
 	/**
 	 * This function takes a number as an argument and adds it to the angle property of the ship.
@@ -385,15 +350,15 @@ export class Ship {
 			this.velY += Math.sin(radians) * this.speed;
 		}
 		if (this.x < this.radius) {
-			this.x = this.canvas.width;
+			this.x = canvas.width;
 		}
-		if (this.x > this.canvas.width) {
+		if (this.x > canvas.width) {
 			this.x = this.radius;
 		}
 		if (this.y < this.radius) {
-			this.y = this.canvas.height;
+			this.y = canvas.height;
 		}
-		if (this.y > this.canvas.height) {
+		if (this.y > canvas.height) {
 			this.y = this.radius;
 		}
 
@@ -409,20 +374,20 @@ export class Ship {
 	 * angle
 	 */
 	draw() {
-		this.ctx.strokeStyle = this.strokeColor;
-		this.ctx.beginPath();
+		ctx.strokeStyle = this.strokeColor;
+		ctx.beginPath();
 		const vertAngle = (Math.PI * 2) / 3;
 		const radians = (this.angle / Math.PI) * 180;
 		this.noseX = this.x - this.radius * Math.cos(radians);
 		this.noseY = this.y - this.radius * Math.sin(radians);
 		let i = 0;
 		for (i; i < 3; i++) {
-			this.ctx.lineTo(
+			ctx.lineTo(
 				this.x - this.radius * Math.cos(vertAngle * i + radians),
 				this.y - this.radius * Math.sin(vertAngle * i + radians)
 			);
 		}
-		this.ctx.closePath();
-		this.ctx.stroke();
+		ctx.closePath();
+		ctx.stroke();
 	}
 }

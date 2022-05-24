@@ -1,27 +1,5 @@
-import { Bullet, Ship, ship } from './setupGame';
+import { ArrowKeys, Bullet, Ship, ship } from './setupGame';
 
-/* Creating an enum of the arrow keys. */
-export const enum ArrowKeys {
-	up = 'ArrowUp',
-	left = 'ArrowLeft',
-	right = 'ArrowRight',
-	shoot = 's'
-}
-
-/* Creating an enum of the keyboard keys. */
-export const enum KBKeys {
-	up = 'w',
-	left = 'a',
-	right = 'd',
-	shoot = 's'
-}
-
-/* An interface that is used to type the function print. */
-interface PrintOptions {
-	positionX: number;
-	positionY: number;
-	size?: string;
-}
 export const keys: boolean[] = [];
 export let bullets: Bullet[] = [];
 /**
@@ -52,23 +30,6 @@ export function resetShip(ship: Ship) {
 	ship.y = canvasHeight / 2;
 	ship.velX = 0;
 	ship.velY = 0;
-}
-
-/**
- * It takes a canvas context, a string, and an object with three properties, and it draws the string on
- * the canvas
- * @param {CanvasRenderingContext2D} ctx - CanvasRenderingContext2D - The context of the canvas.
- * @param {string} text - The text to be printed
- * @param {PrintOptions}  - CanvasRenderingContext2D - The context of the canvas.
- */
-export function print(
-	ctx: CanvasRenderingContext2D,
-	text: string,
-	{ positionX, positionY, size }: PrintOptions
-) {
-	ctx.fillStyle = 'white';
-	ctx.font = `${size || '21px'} Arial`;
-	ctx.fillText(text, positionX, positionY);
 }
 
 export const canvasWidth = 640;
