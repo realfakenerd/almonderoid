@@ -1,42 +1,37 @@
 <script lang="ts">
-	import setupGame, { highScore, score, finishedLoading } from "$lib/setupGame";
-
+	import Lives from '$lib/Lives.svelte';
+	import setupGame,{ isGameOver,lives } from '$lib/setupGame';
+	import { highScore,score } from '$lib/stores/score';
+	import { fade } from 'svelte/transition';
 </script>
 
-<div class="score-container">
+<div class="inline-flex justify-between w-full text-lg my-2">
 	<h2>SCORE: {$score}</h2>
 	<h2>HIGHSCORE: {$highScore}</h2>
 </div>
-<div class="game-container">
-	<canvas class:border={$finishedLoading} height="460" width="640" use:setupGame id="game" />
+<div class="relative">
+	{#if $isGameOver}
+		<div class="absolute top-1/2 left-1/2 transform -translate-x-1/2">
+			<span class="text-3xl text-primary">GAME OVER</span>
+		</div>
+	{/if}
+	<canvas
+		class="border-2 border-primary bg-neutral rounded-box shadow-md shadow-red-600/50"
+		height="460"
+		width="640"
+		use:setupGame
+		id="game"
+	/>
 </div>
-<a sveltekit:reload href="/">RESET GAME</a>
-<style>
-	a {
-		text-decoration: none;
-		background: black;
-		color: white;
-		border: 1px solid white;
-		padding: 1rem 1.250rem;
-	}
-	.score-container {
-		color: white;
-		font-size: 21px;
-		display: inline-flex;
-
-	}
-	.score-container > h2 {
-		margin: auto 1rem;
-	}
-	.game-container {
-		max-width: 1400px;
-		margin: auto;
-		margin-bottom: 20px;
-	}
-	.border{
-		border:1px solid white;
-	}
-	canvas {
-		background-color: black;
-	}
-</style>
+<div class="inline-flex justify-between items-center w-full my-5">
+	<a class="btn border-2 border-primary" sveltekit:reload href="/">RESET GAME</a>
+	{#if $lives > 0}
+		<ul transition:fade={{ duration: 1000 }} class="inline-flex py-3 px-5 rounded-box bg-neutral">
+			{#each Array($lives) as lv, i (i)}
+				<li>
+					<Lives />
+				</li>
+			{/each}
+		</ul>
+	{/if}
+</div>
