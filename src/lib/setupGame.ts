@@ -42,11 +42,15 @@ let asteroids: Asteroid[] = [];
 
 export const isGameOver = writable(false);
 
+const random = (min: number, max: number) => (Math.random() * (max - min + 1) & 0xFFFFFFFF) + min;
+
 /**
  * We're checking for collisions between the ship and asteroids, and between bullets and asteroids. If
  * there's a collision, we're either resetting the ship or destroying the asteroid
  */
- function renderGame() {
+function renderGame() {
+	requestAnimationFrame(renderGame);
+
 	ship.movingForward =
 		keys[ArrowKeys.up as unknown as number] || keys[KBKeys.up as unknown as number];
 
@@ -56,21 +60,20 @@ export const isGameOver = writable(false);
 	if (keys[ArrowKeys.left as unknown as number] || keys[KBKeys.left as unknown as number]) {
 		ship.rotate(-1);
 	}
-
 	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
+	
 	if (get(lives) <= 0) {
 		document.body.removeEventListener('keydown', handleKeydown);
 		document.body.removeEventListener('keyup', handleKeyup);
 
 		ship.visible = false;
 
-		isGameOver.set(true)
+		isGameOver.set(true);
 	}
 
 	if (asteroids.length === 0) {
 		resetShip(ship);
-		lives.update(val => val+= 1);
+		lives.update(val => val += 1);
 		let i = 0;
 		for (i; i < maxAsteroids; i++) {
 			const asteroid = new Asteroid();
@@ -93,7 +96,7 @@ export const isGameOver = writable(false);
 				)
 			) {
 				resetShip(ship);
-				lives.update(val=>val-=1);
+				lives.update(val => val -= 1);
 			}
 		}
 	}
@@ -116,11 +119,11 @@ export const isGameOver = writable(false);
 					if (asteroids[l].level === 1) {
 						asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 25, 2, 22, 2));
 						asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 25, 2, 22, 2));
-						score.update(val => val += 20)
+						score.update(val => val += 20);
 					} else if (asteroids[l].level === 2) {
 						asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 15, 3, 12, 2.5));
 						asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 15, 3, 12, 2.5));
-						score.update(val => val += 30)
+						score.update(val => val += 30);
 					}
 					asteroids.splice(l, 1);
 					bullets.splice(m, 1);
@@ -139,29 +142,26 @@ export const isGameOver = writable(false);
 	if (ship.visible) {
 		ship.update();
 		ship.draw();
-		if (bullets.length !== 0) {
-			let i = 0;
-			for (i; i < bullets.length; i++) {
-				bullets[i].update();
-				bullets[i].draw();
-			}
+		highScore.update((val) => {
+			localStorage.setItem(localStorageName, JSON.stringify(Math.max(simpleScore, val)));
+			return Math.max(simpleScore, val);
+		});
+	}
+	if (bullets.length !== 0) {
+		let i = 0;
+		for (i; i < bullets.length; i++) {
+			bullets[i].update();
+			bullets[i].draw();
 		}
 	}
-
 
 	if (asteroids.length !== 0) {
 		let i = 0;
 		for (i; i < asteroids.length; i++) {
-			asteroids[i].update();
-			asteroids[i].draw();
+				asteroids[i].update();
+				asteroids[i].draw();
 		}
 	}
-
-	highScore.update((val) => {
-		localStorage.setItem(localStorageName, JSON.stringify(Math.max(simpleScore, val)));
-		return Math.max(simpleScore, val);
-	});
-	requestAnimationFrame(renderGame);
 }
 
 /**
@@ -191,17 +191,37 @@ export default function setupGame(node: HTMLCanvasElement) {
 	renderGame();
 }
 
-
+class Base {
+	visible = true;
+	x: number;
+	y: number;
+	speed: number;
+	angle: number;
+	/**
+	 * The constructor function is a special function that is called when a new instance of the class is
+	 * created
+	 * @param {number} x - The x coordinate.
+	 * @param {number} y - The y coordinate.
+	 * @param {number} speed - The speed.
+	 * @param {number} angle - The angle in radians that the object is traveling.
+	 */
+	constructor(
+		x: number,
+		y: number,
+		speed: number,
+		angle: number
+	) {
+		this.x = x;
+		this.y = y;
+		this.speed = speed;
+		this.angle = angle;
+	}
+}
 
 /* It creates a bullet object that moves in the direction of the ship's nose */
-export class Bullet {
-	visible = true;
-	x = ship.noseX;
-	y = ship.noseY;
-	angle: number;
+export class Bullet extends Base {
 	height = 4;
 	width = 4;
-	speed = 5;
 	velX = 0;
 	velY = 0;
 
@@ -212,7 +232,7 @@ export class Bullet {
 	 * @param {number} angle - The angle of the rotation in degrees.
 	 */
 	constructor(angle: number) {
-		this.angle = angle;
+		super(ship.noseX, ship.noseY, 5, angle);
 		this.radians = (this.angle / Math.PI) * 180;
 	}
 
@@ -238,13 +258,8 @@ export class Bullet {
 }
 
 /* The Asteroid class is used to create a new instance of the Asteroid class */
-class Asteroid {
-	visible = true;
-	x: number;
-	y: number;
-	speed: number;
+class Asteroid extends Base {
 	radius: number;
-	angle = Math.floor(Math.random() * 359);
 	strokeColor = 'white';
 	collisionRadius: number;
 	level: number;
@@ -259,19 +274,17 @@ class Asteroid {
 	 * @param [speed=1.5] - The speed at which the enemy moves.
 	 */
 	constructor(
-		x: number = Math.floor(Math.random() * canvasWidth),
-		y: number = Math.floor(Math.random() * canvasHeight),
+		x: number = random(100, canvasWidth),
+		y: number = random(100, canvasHeight),
 		radius = 50,
 		level = 1,
 		collisionRadius = 46,
 		speed = 1.5
 	) {
-		this.x = x;
-		this.y = y;
+		super(x, y, speed, random(2, 359));
 		this.radius = radius;
 		this.collisionRadius = collisionRadius;
 		this.level = level;
-		this.speed = speed;
 	}
 
 	/**
@@ -311,25 +324,25 @@ class Asteroid {
 		}
 		ctx.closePath();
 		ctx.stroke();
+
 	}
 }
 
 /** @classdesc We're creating a class called Ship that has a bunch of properties and methods that we can use to
 create a ship object */
-export class Ship {
-	visible = true;
-	x = canvasWidth / 2;
-	y = canvasHeight / 2;
+export class Ship extends Base {
 	movingForward = false;
-	speed = 0.1;
 	velX = 0;
 	velY = 0;
 	rotateSpeed = 0.001;
 	radius = 15;
-	angle = 0;
 	strokeColor = '#0978d2';
 	noseX = canvasWidth / 2 + 15;
 	noseY = canvasHeight / 2;
+
+	constructor() {
+		super(canvasWidth / 2, canvasHeight / 2, 0.04, 0);
+	}
 
 	/**
 	 * This function takes a number as an argument and adds it to the angle property of the ship.
