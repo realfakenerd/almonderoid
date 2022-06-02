@@ -1,0 +1,12 @@
+{
+	"name": "Almonderoide",
+	"version": "1.0",
+	"manifest_version": 3,
+	"description": "best game on history",
+    "icons": {
+        "160": "icon.png"
+    },
+    "browser_action":{
+        "default_popup": "index.html"
+    }
+}

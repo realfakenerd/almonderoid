@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Lives from '$lib/Lives.svelte';
+	import Lives from '$lib/components/Lives.svelte';
 	import setupGame,{ isGameOver,lives } from '$lib/setupGame';
 	import { highScore,score } from '$lib/stores/score';
 	import { fade } from 'svelte/transition';
