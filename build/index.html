@@ -3,72 +3,50 @@
 	<head>
 		<meta charset="utf-8" />
 		<link rel="icon" href="./icon.png" />
-		<link rel="manifest" href="./manifest.json">
+		<link rel="manifest" href="./manifest.json" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>Almonderoid</title>
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 		<meta http-equiv="content-security-policy" content="">
-	<link rel="stylesheet" href="/_app/assets/pages/__layout.svelte-68717d69.css">
-	<link rel="modulepreload" href="/_app/start-f28fcd7d.js">
-	<link rel="modulepreload" href="/_app/chunks/index-8d7aee1e.js">
-	<link rel="modulepreload" href="/_app/chunks/index-9616d577.js">
-	<link rel="modulepreload" href="/_app/pages/__layout.svelte-d80966b9.js">
-	<link rel="modulepreload" href="/_app/pages/index.svelte-10e0f341.js">
+	<link rel="stylesheet" href="/_app/assets/pages/__layout.svelte-6915608b.css">
+	<link rel="modulepreload" href="/_app/start-701d7360.js">
+	<link rel="modulepreload" href="/_app/chunks/index-60d8f3df.js">
+	<link rel="modulepreload" href="/_app/chunks/index-1873ca51.js">
+	<link rel="modulepreload" href="/_app/chunks/singletons-d1fb5791.js">
+	<link rel="modulepreload" href="/_app/pages/__layout.svelte-4785b07c.js">
+	<link rel="modulepreload" href="/_app/pages/index.svelte-8ea5c12d.js">
+	<link rel="modulepreload" href="/_app/chunks/index-5da914bf.js">
 	</head>
 	<body>
 		<div>
 
 
-<main class="grid place-items-center"><div class="p-10"><div class="inline-flex justify-between w-full text-lg my-2"><h2>SCORE: 0</h2>
+<header><nav class="navbar justify-center"><div><a class="btn btn-link" href="/">game</a>
+			<a class="btn btn-link" href="/config">settings</a></div></nav></header>
+
+<main class="grid place-items-center"><div class="px-10"><div class="my-2 inline-flex w-full justify-between text-lg"><h2>SCORE: 0</h2>
 	<h2>HIGHSCORE: 0</h2></div>
-<div class="relative">
-	<canvas class="border-2 border-primary bg-neutral rounded-box shadow-md shadow-red-600/50" height="460" width="640" id="game"></canvas></div>
-<div class="inline-flex justify-between items-center w-full my-5"><a class="btn border-2 border-primary" sveltekit:reload href="/">RESET GAME</a>
-	<ul class="inline-flex py-3 px-5 rounded-box bg-neutral"><li><svg class="h-8 w-8 fill-secondary" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 225.465 225.465" xml:space="preserve"><path d="M204.459,21.359c-28.008-28.008-73.58-28.008-101.588,0C84.726,39.505,78.352,65.021,83.719,88.359L2.197,169.881
-	c-2.929,2.93-2.929,7.678,0,10.607c1.465,1.464,3.385,2.196,5.304,2.196s3.839-0.732,5.304-2.196l48.405-48.405l14.721,6.491
-	l-27.772,27.772c-2.929,2.93-2.929,7.678,0,10.607c1.465,1.464,3.385,2.196,5.304,2.196s3.839-0.732,5.304-2.196l27.908-27.908
-	l6.622,14.59l-48.672,48.672c-2.929,2.93-2.929,7.678,0,10.607c1.465,1.464,3.385,2.196,5.304,2.196s3.839-0.732,5.304-2.196
-	l81.079-81.079c5.692,1.408,11.523,2.117,17.356,2.117c18.395,0,36.79-7.002,50.794-21.006
-	C232.467,94.94,232.467,49.367,204.459,21.359z M104.625,152.306l-5.558-12.246c-2.808-6.188-7.778-11.106-13.998-13.849
-	l-12.484-5.504l16.708-16.708c3.378,6.842,7.89,13.262,13.577,18.949c5.425,5.425,11.514,9.786,18.002,13.11L104.625,152.306z
-	 M184.897,103.383L184.897,103.383c-8.343,8.343-19.434,12.937-31.231,12.937s-22.889-4.594-31.23-12.937
-	c-17.22-17.22-17.22-45.24,0-62.461c8.342-8.342,19.433-12.936,31.23-12.936s22.889,4.594,31.231,12.936
-	C202.115,58.143,202.115,86.163,184.897,103.383z M174.289,51.528c11.372,11.373,11.372,29.877,0,41.248
-	c-5.509,5.51-12.833,8.543-20.624,8.543s-15.115-3.033-20.623-8.543c-11.372-11.372-11.372-29.875,0-41.248
-	c5.508-5.509,12.832-8.542,20.623-8.542S168.781,46.02,174.289,51.528z"></path><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
-				</li><li><svg class="h-8 w-8 fill-secondary" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 225.465 225.465" xml:space="preserve"><path d="M204.459,21.359c-28.008-28.008-73.58-28.008-101.588,0C84.726,39.505,78.352,65.021,83.719,88.359L2.197,169.881
-	c-2.929,2.93-2.929,7.678,0,10.607c1.465,1.464,3.385,2.196,5.304,2.196s3.839-0.732,5.304-2.196l48.405-48.405l14.721,6.491
-	l-27.772,27.772c-2.929,2.93-2.929,7.678,0,10.607c1.465,1.464,3.385,2.196,5.304,2.196s3.839-0.732,5.304-2.196l27.908-27.908
-	l6.622,14.59l-48.672,48.672c-2.929,2.93-2.929,7.678,0,10.607c1.465,1.464,3.385,2.196,5.304,2.196s3.839-0.732,5.304-2.196
-	l81.079-81.079c5.692,1.408,11.523,2.117,17.356,2.117c18.395,0,36.79-7.002,50.794-21.006
-	C232.467,94.94,232.467,49.367,204.459,21.359z M104.625,152.306l-5.558-12.246c-2.808-6.188-7.778-11.106-13.998-13.849
-	l-12.484-5.504l16.708-16.708c3.378,6.842,7.89,13.262,13.577,18.949c5.425,5.425,11.514,9.786,18.002,13.11L104.625,152.306z
-	 M184.897,103.383L184.897,103.383c-8.343,8.343-19.434,12.937-31.231,12.937s-22.889-4.594-31.23-12.937
-	c-17.22-17.22-17.22-45.24,0-62.461c8.342-8.342,19.433-12.936,31.23-12.936s22.889,4.594,31.231,12.936
-	C202.115,58.143,202.115,86.163,184.897,103.383z M174.289,51.528c11.372,11.373,11.372,29.877,0,41.248
-	c-5.509,5.51-12.833,8.543-20.624,8.543s-15.115-3.033-20.623-8.543c-11.372-11.372-11.372-29.875,0-41.248
-	c5.508-5.509,12.832-8.542,20.623-8.542S168.781,46.02,174.289,51.528z"></path><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
-				</li><li><svg class="h-8 w-8 fill-secondary" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" viewBox="0 0 225.465 225.465" xml:space="preserve"><path d="M204.459,21.359c-28.008-28.008-73.58-28.008-101.588,0C84.726,39.505,78.352,65.021,83.719,88.359L2.197,169.881
-	c-2.929,2.93-2.929,7.678,0,10.607c1.465,1.464,3.385,2.196,5.304,2.196s3.839-0.732,5.304-2.196l48.405-48.405l14.721,6.491
-	l-27.772,27.772c-2.929,2.93-2.929,7.678,0,10.607c1.465,1.464,3.385,2.196,5.304,2.196s3.839-0.732,5.304-2.196l27.908-27.908
-	l6.622,14.59l-48.672,48.672c-2.929,2.93-2.929,7.678,0,10.607c1.465,1.464,3.385,2.196,5.304,2.196s3.839-0.732,5.304-2.196
-	l81.079-81.079c5.692,1.408,11.523,2.117,17.356,2.117c18.395,0,36.79-7.002,50.794-21.006
-	C232.467,94.94,232.467,49.367,204.459,21.359z M104.625,152.306l-5.558-12.246c-2.808-6.188-7.778-11.106-13.998-13.849
-	l-12.484-5.504l16.708-16.708c3.378,6.842,7.89,13.262,13.577,18.949c5.425,5.425,11.514,9.786,18.002,13.11L104.625,152.306z
-	 M184.897,103.383L184.897,103.383c-8.343,8.343-19.434,12.937-31.231,12.937s-22.889-4.594-31.23-12.937
-	c-17.22-17.22-17.22-45.24,0-62.461c8.342-8.342,19.433-12.936,31.23-12.936s22.889,4.594,31.231,12.936
-	C202.115,58.143,202.115,86.163,184.897,103.383z M174.289,51.528c11.372,11.373,11.372,29.877,0,41.248
-	c-5.509,5.51-12.833,8.543-20.624,8.543s-15.115-3.033-20.623-8.543c-11.372-11.372-11.372-29.875,0-41.248
-	c5.508-5.509,12.832-8.542,20.623-8.542S168.781,46.02,174.289,51.528z"></path><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
+<div class="relative"><section class="absolute inset-0 grid grid-rows-3 place-items-center"><div class="flex flex-col items-center"><h2 class="mb-5 text-xl">Play the Game</h2>
+				<button><svg xmlns="http://www.w3.org/2000/svg" class="transition-color h-20 w-20 duration-300 hover:text-primary" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg></button></div>
+			<div class="row-span-2 space-y-2"><h3><kbd class="kbd">space</kbd> to shoot</h3>
+				<h3><kbd class="kbd">w</kbd> to go forward</h3>
+				<h3><kbd class="kbd">a</kbd> to rotate left</h3>
+				<h3><kbd class="kbd">d</kbd> to rotate right</h3>
+				<p class="text-sm">you can also change<br>
+					the settings of the game
+					<a class="link decoration-wavy hover:text-primary" href="/config">here</a></p></div></section>
+	
+	<canvas class="rounded-box border-2 border-primary bg-neutral shadow-md shadow-red-600/50" height="460" width="640" id="game"></canvas></div>
+<div class="my-5 inline-flex w-full items-center justify-between"><a class="btn border-2 border-primary" sveltekit:reload href="/">RESET GAME</a>
+	<ul class="rounded-box inline-flex bg-neutral py-3 px-5"><li><svg class="h-8 w-8 fill-secondary" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 225.5 225.5"><path d="M204.5 21.4a72 72 0 0 0-120.8 67L2.2 169.9a7.5 7.5 0 1 0 10.6 10.6L61.2 132l14.7 6.5-27.7 27.7A7.5 7.5 0 1 0 58.8 177l27.9-28 6.6 14.6-48.7 48.7A7.5 7.5 0 1 0 55.2 223l81.1-81a72.3 72.3 0 0 0 68.2-19 72 72 0 0 0 0-101.5zm-99.9 131L99.1 140a27.6 27.6 0 0 0-14-13.9l-12.5-5.5L89.3 104a71.5 71.5 0 0 0 31.6 32l-16.3 16.3zm80.3-49a43.9 43.9 0 0 1-62.5 0 44.2 44.2 0 1 1 62.5 0zm-10.6-51.9a29.2 29.2 0 1 1-41.4 41.3 29.2 29.2 0 0 1 41.4-41.3z"></path></svg>
+				</li><li><svg class="h-8 w-8 fill-secondary" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 225.5 225.5"><path d="M204.5 21.4a72 72 0 0 0-120.8 67L2.2 169.9a7.5 7.5 0 1 0 10.6 10.6L61.2 132l14.7 6.5-27.7 27.7A7.5 7.5 0 1 0 58.8 177l27.9-28 6.6 14.6-48.7 48.7A7.5 7.5 0 1 0 55.2 223l81.1-81a72.3 72.3 0 0 0 68.2-19 72 72 0 0 0 0-101.5zm-99.9 131L99.1 140a27.6 27.6 0 0 0-14-13.9l-12.5-5.5L89.3 104a71.5 71.5 0 0 0 31.6 32l-16.3 16.3zm80.3-49a43.9 43.9 0 0 1-62.5 0 44.2 44.2 0 1 1 62.5 0zm-10.6-51.9a29.2 29.2 0 1 1-41.4 41.3 29.2 29.2 0 0 1 41.4-41.3z"></path></svg>
+				</li><li><svg class="h-8 w-8 fill-secondary" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" viewBox="0 0 225.5 225.5"><path d="M204.5 21.4a72 72 0 0 0-120.8 67L2.2 169.9a7.5 7.5 0 1 0 10.6 10.6L61.2 132l14.7 6.5-27.7 27.7A7.5 7.5 0 1 0 58.8 177l27.9-28 6.6 14.6-48.7 48.7A7.5 7.5 0 1 0 55.2 223l81.1-81a72.3 72.3 0 0 0 68.2-19 72 72 0 0 0 0-101.5zm-99.9 131L99.1 140a27.6 27.6 0 0 0-14-13.9l-12.5-5.5L89.3 104a71.5 71.5 0 0 0 31.6 32l-16.3 16.3zm80.3-49a43.9 43.9 0 0 1-62.5 0 44.2 44.2 0 1 1 62.5 0zm-10.6-51.9a29.2 29.2 0 1 1-41.4 41.3 29.2 29.2 0 0 1 41.4-41.3z"></path></svg>
 				</li></ul></div></div></main>
 
 
-		<script type="module" data-hydrate="f43r1t">
-		import { start } from "/_app/start-f28fcd7d.js";
+		<script type="module" data-hydrate="1fbm5k3">
+		import { start } from "/_app/start-701d7360.js";
 		start({
-			target: document.querySelector('[data-hydrate="f43r1t"]').parentNode,
+			target: document.querySelector('[data-hydrate="1fbm5k3"]').parentNode,
 			paths: {"base":"","assets":""},
 			session: {},
 			route: true,
@@ -78,8 +56,8 @@
 				status: 200,
 				error: null,
 				nodes: [
-					import("/_app/pages/__layout.svelte-d80966b9.js"),
-						import("/_app/pages/index.svelte-10e0f341.js")
+					import("/_app/pages/__layout.svelte-4785b07c.js"),
+						import("/_app/pages/index.svelte-8ea5c12d.js")
 				],
 				params: {},
 				routeId: ""
