@@ -13,22 +13,24 @@ const config = {
 			precompress: true
 		}),
 		prerender: {
-			default: true,		
+			default: true
 		},
-		vite:{
+		vite: {
 			build: {
-				reportCompressedSize: false,
+				reportCompressedSize: true,
 				target: 'esnext',
-				minify: 'esbuild'
+				minify: 'esbuild',
 			},
-			plugins:[viteCompression({
-				algorithm: 'brotliCompress',
-				verbose: false,
-				threshold: 512,
-				compressionOptions: {
-					level: 3
-				}
-			})]
+			plugins: [
+				viteCompression({
+					algorithm: 'brotliCompress',
+					verbose: true,
+					threshold: 512,
+					compressionOptions: {
+						level: 3
+					}
+				})
+			]
 		}
 	}
 };
