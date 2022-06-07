@@ -1,4 +1,6 @@
-import { ArrowKeys, Bullet, Ship, ship } from './setupGame';
+import { get } from 'svelte/store';
+import { keyStore } from './stores';
+import { Bullet, Ship, ship } from './setupGame';
 
 export const keys: boolean[] = [];
 export let bullets: Bullet[] = [];
@@ -16,7 +18,7 @@ export const handleKeydown = (e: KeyboardEvent) => {
  */
 export const handleKeyup = (e: KeyboardEvent) => {
 	keys[(e as any).key] = false;
-	if (e.key === ArrowKeys.shoot) {
+	if (e.key === ' ' || e.key === get(keyStore).shootKey) {
 		bullets = [new Bullet(ship.angle), ...bullets];
 	}
 };

@@ -1,6 +1,6 @@
-import { get, writable } from 'svelte/store';
+import { get } from 'svelte/store';
 import { circleCollision } from './collisionSystem';
-import { highScore, score } from './stores/score';
+import { highScore, score, lives, isGameOver, isGameStarted, keyStore } from './stores';
 import {
 	bullets,
 	canvasHeight,
@@ -28,21 +28,29 @@ export const enum KBKeys {
 }
 
 export let ship: Ship;
-export let canvas: HTMLCanvasElement;
-export let ctx: CanvasRenderingContext2D;
+let canvas: HTMLCanvasElement;
+let ctx: CanvasRenderingContext2D;
+let asteroids: Asteroid[] = [];
 
 let simpleScore = 0;
 const localStorageName = 'HighScore';
 
-const maxAsteroids = 4;
+let asteroidsWave = 4;
+const maxAsteroids = 8;
 
-export const lives = writable(3);
+const lsKeys = {
+	forwardKey: '',
+	leftKey: '',
+	rightKey: '',
+	shootKey: ''
+};
 
-let asteroids: Asteroid[] = [];
-
-export const isGameOver = writable(false);
-
-const random = (min: number, max: number) => (Math.random() * (max - min + 1) & 0xFFFFFFFF) + min;
+keyStore.subscribe((val) => {
+	lsKeys.forwardKey = val.forwardKey;
+	lsKeys.leftKey = val.leftKey;
+	lsKeys.rightKey = val.rightKey;
+	lsKeys.shootKey = val.shootKey;
+});
 
 /**
  * We're checking for collisions between the ship and asteroids, and between bullets and asteroids. If
@@ -52,16 +60,16 @@ function renderGame() {
 	requestAnimationFrame(renderGame);
 
 	ship.movingForward =
-		keys[ArrowKeys.up as unknown as number] || keys[KBKeys.up as unknown as number];
+		keys[ArrowKeys.up as unknown as number] || keys[lsKeys.forwardKey as unknown as number];
 
-	if (keys[ArrowKeys.right as unknown as number] || keys[KBKeys.right as unknown as number]) {
+	if (keys[ArrowKeys.right as unknown as number] || keys[lsKeys.rightKey as unknown as number]) {
 		ship.rotate(1);
 	}
-	if (keys[ArrowKeys.left as unknown as number] || keys[KBKeys.left as unknown as number]) {
+	if (keys[ArrowKeys.left as unknown as number] || keys[lsKeys.leftKey as unknown as number]) {
 		ship.rotate(-1);
 	}
 	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-	
+
 	if (get(lives) <= 0) {
 		document.body.removeEventListener('keydown', handleKeydown);
 		document.body.removeEventListener('keyup', handleKeyup);
@@ -73,12 +81,16 @@ function renderGame() {
 
 	if (asteroids.length === 0) {
 		resetShip(ship);
-		lives.update(val => val += 1);
+		lives.update((val) => (val += 1));
 		let i = 0;
-		for (i; i < maxAsteroids; i++) {
+		asteroidsWave += 1;
+		for (i; i < asteroidsWave; i++) {
 			const asteroid = new Asteroid();
 			asteroid.speed += 0.25;
 			asteroids = [asteroid, ...asteroids];
+		}
+		if (asteroidsWave >= maxAsteroids) {
+			asteroidsWave = 4;
 		}
 	}
 
@@ -96,7 +108,7 @@ function renderGame() {
 				)
 			) {
 				resetShip(ship);
-				lives.update(val => val -= 1);
+				lives.update((val) => (val -= 1));
 			}
 		}
 	}
@@ -119,11 +131,11 @@ function renderGame() {
 					if (asteroids[l].level === 1) {
 						asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 25, 2, 22, 2));
 						asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 25, 2, 22, 2));
-						score.update(val => val += 20);
+						score.update((val) => (val += 20));
 					} else if (asteroids[l].level === 2) {
 						asteroids.push(new Asteroid(asteroids[l].x - 5, asteroids[l].y - 5, 15, 3, 12, 2.5));
 						asteroids.push(new Asteroid(asteroids[l].x + 5, asteroids[l].y + 5, 15, 3, 12, 2.5));
-						score.update(val => val += 30);
+						score.update((val) => (val += 30));
 					}
 					asteroids.splice(l, 1);
 					bullets.splice(m, 1);
@@ -158,8 +170,8 @@ function renderGame() {
 	if (asteroids.length !== 0) {
 		let i = 0;
 		for (i; i < asteroids.length; i++) {
-				asteroids[i].update();
-				asteroids[i].draw();
+			asteroids[i].update();
+			asteroids[i].draw();
 		}
 	}
 }
@@ -169,14 +181,15 @@ function renderGame() {
  * @param {HTMLCanvasElement} node - HTMLCanvasElement - The canvas element that we're going to be
  * drawing on.
  */
-export default function setupGame(node: HTMLCanvasElement) {
-	ctx = node.getContext('2d') as CanvasRenderingContext2D;
-	canvas = node;
+export default function setupGame() {
+	canvas = document.getElementById('game') as HTMLCanvasElement;
+	ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+	isGameStarted.set(true);
 
 	ship = new Ship();
 
 	let i = 0;
-	for (i; i < maxAsteroids; i++) {
+	for (i; i < asteroidsWave; i++) {
 		asteroids = [new Asteroid(), ...asteroids];
 	}
 
@@ -188,6 +201,7 @@ export default function setupGame(node: HTMLCanvasElement) {
 	} else {
 		highScore.set(0);
 	}
+
 	renderGame();
 }
 
@@ -205,12 +219,7 @@ class Base {
 	 * @param {number} speed - The speed.
 	 * @param {number} angle - The angle in radians that the object is traveling.
 	 */
-	constructor(
-		x: number,
-		y: number,
-		speed: number,
-		angle: number
-	) {
+	constructor(x: number, y: number, speed: number, angle: number) {
 		this.x = x;
 		this.y = y;
 		this.speed = speed;
@@ -253,10 +262,13 @@ export class Bullet extends Base {
 	 */
 	draw() {
 		ctx.fillStyle = '#fe3637';
-		ctx.fillRect(this.x, this.y, this.width, this.height);
+		ctx.beginPath();
+		ctx.arc(this.x, this.y, 3, 0, 2 * Math.PI, false);
+		ctx.fill();
 	}
 }
 
+const random = (min: number, max: number) => ((Math.random() * (max - min + 1)) & 0xffffffff) + min;
 /* The Asteroid class is used to create a new instance of the Asteroid class */
 class Asteroid extends Base {
 	radius: number;
@@ -274,8 +286,8 @@ class Asteroid extends Base {
 	 * @param [speed=1.5] - The speed at which the enemy moves.
 	 */
 	constructor(
-		x: number = random(100, canvasWidth),
-		y: number = random(100, canvasHeight),
+		x: number = random(canvasWidth, canvasWidth * 2),
+		y: number = random(canvasHeight, canvasHeight * 2),
 		radius = 50,
 		level = 1,
 		collisionRadius = 46,
@@ -324,7 +336,6 @@ class Asteroid extends Base {
 		}
 		ctx.closePath();
 		ctx.stroke();
-
 	}
 }
 
