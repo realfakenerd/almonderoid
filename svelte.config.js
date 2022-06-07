@@ -17,14 +17,14 @@ const config = {
 		},
 		vite: {
 			build: {
-				reportCompressedSize: true,
+				reportCompressedSize: false,
 				target: 'esnext',
 				minify: 'esbuild',
 			},
 			plugins: [
 				viteCompression({
 					algorithm: 'brotliCompress',
-					verbose: true,
+					verbose: false,
 					threshold: 512,
 					compressionOptions: {
 						level: 3
