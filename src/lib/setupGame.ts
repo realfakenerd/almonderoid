@@ -33,7 +33,6 @@ let ctx: CanvasRenderingContext2D;
 let asteroids: Asteroid[] = [];
 
 let simpleScore = 0;
-const localStorageName = 'HighScore';
 
 let asteroidsWave = 4;
 const maxAsteroids = 8;
@@ -154,10 +153,7 @@ function renderGame() {
 	if (ship.visible) {
 		ship.update();
 		ship.draw();
-		highScore.update((val) => {
-			localStorage.setItem(localStorageName, JSON.stringify(Math.max(simpleScore, val)));
-			return Math.max(simpleScore, val);
-		});
+		highScore.set(simpleScore);
 	}
 	if (bullets.length !== 0) {
 		let i = 0;
@@ -196,8 +192,8 @@ export default function setupGame() {
 	document.body.addEventListener('keydown', handleKeydown);
 	document.body.addEventListener('keyup', handleKeyup);
 
-	if (localStorage.getItem(localStorageName)) {
-		highScore.set(parseInt(localStorage.getItem(localStorageName) as string));
+	if (localStorage.getItem('highscore')) {
+		highScore.set(parseInt(localStorage.getItem('highscore') as string));
 	} else {
 		highScore.set(0);
 	}

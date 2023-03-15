@@ -19,8 +19,8 @@
 	}
 </script>
 
-<div class="container">
-	<form class="space-y-5" on:submit|preventDefault={setKey}>
+<div class="w-1/2 mx-auto flex flex-col items-center">
+	<form class="space-y-2" on:submit|preventDefault={setKey}>
 		<section class="form-control">
 			<label class="label" for="left">
 				<span class="label-text">left key</span>

@@ -13,7 +13,7 @@ export const isGameOver = writable(false);
 export const isGameStarted = writable(false);
 
 export const score = writable(0);
-export const highScore = writable(0);
+export const highScore = ls('highscore', 0);
 
 export const keyStore = ls<KeysDef>('settings', {
 	forwardKey: '',

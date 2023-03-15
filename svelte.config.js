@@ -1,38 +1,17 @@
-import adapter from '@sveltejs/adapter-static';
-import viteCompression from 'vite-plugin-compression';
-import preprocess from 'svelte-preprocess';
+import adapter from '@sveltejs/adapter-vercel';
+import { vitePreprocess } from '@sveltejs/kit/vite';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	// Consult https://github.com/sveltejs/svelte-preprocess
+	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
 	// for more information about preprocessors
-	preprocess: preprocess(),
-
+	preprocess: vitePreprocess(),
 	kit: {
 		adapter: adapter({
-			precompress: true
-		}),
-		prerender: {
-			default: true
-		},
-		vite: {
-			build: {
-				reportCompressedSize: false,
-				target: 'esnext',
-				minify: 'esbuild',
-			},
-			plugins: [
-				viteCompression({
-					algorithm: 'brotliCompress',
-					verbose: false,
-					threshold: 512,
-					compressionOptions: {
-						level: 3
-					}
-				})
-			]
-		}
-	}
+			runtime: 'edge'
+		})
+	},
+	inlineStyleThreshold: 2048
 };
 
 export default config;

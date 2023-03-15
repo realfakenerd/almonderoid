@@ -4,6 +4,7 @@ import { Bullet, Ship, ship } from './setupGame';
 
 export const keys: boolean[] = [];
 export let bullets: Bullet[] = [];
+
 /**
  * When a key is pressed, set the value of the keycode in the keys array to true.
  * @param {KeyboardEvent} e - KeyboardEvent - This is the event object that is passed to the function.
@@ -11,6 +12,7 @@ export let bullets: Bullet[] = [];
 export const handleKeydown = (e: KeyboardEvent) => {
 	keys[(e as any).key] = true;
 };
+
 /**
  * We're adding a new bullet to the bullets array, and we're using the ship's angle to determine the
  * direction of the bullet

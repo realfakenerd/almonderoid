@@ -1,9 +1,9 @@
 <script>
-	import { fly } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 </script>
 
 <svg
-	out:fly={{ y: -20, opacity: 0, duration: 700 }}
+	out:fade={{ duration: 300 }}
 	class="h-8 w-8 fill-secondary"
 	xmlns="http://www.w3.org/2000/svg"
 	xml:space="preserve"
