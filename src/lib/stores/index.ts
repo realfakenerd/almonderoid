@@ -8,7 +8,7 @@ interface KeysDef {
 	shootKey: string;
 }
 
-export const lives = writable(3);
+export const lives = writable(999);
 export const isGameOver = writable(false);
 export const isGameStarted = writable(false);
 

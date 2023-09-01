@@ -1,8 +1,9 @@
 <script lang="ts">
-	import Lives from '$lib/components/Lives.svelte';
 	import setupGame from '$lib/setupGame';
-	import { highScore, score, isGameOver, lives, isGameStarted } from '$lib/stores';
-	import { fade } from 'svelte/transition';
+	import { highScore, isGameOver, isGameStarted, score } from '$lib/stores';
+	import { onMount } from 'svelte';
+
+	onMount(() => setupGame())
 </script>
 
 
@@ -35,7 +36,7 @@
 				<span class="text-3xl text-primary">GAME OVER</span>
 			</div>
 		{/if}
-		{#if !$isGameStarted}
+		<!-- {#if !$isGameStarted}
 		<div
 			class="absolute top-1/2 transform left-1/2 
 			-translate-x-1/2 -translate-y-1/2 flex flex-col items-center"
@@ -56,7 +57,7 @@
 				</svg>
 			</button>
 		</div>
-		{/if}
+		{/if} -->
 		<canvas
 			class="rounded-box border-2 border-primary bg-neutral shadow-md shadow-red-600/50"
 			height="460"
@@ -67,7 +68,7 @@
 </div>
 <div class="flex flex-col gap-y-2 w-full items-start justify-between">
 	<a class="btn border-2 border-primary" data-sveltekit-reload href="/">RESET GAME</a>
-	{#if $lives > 0}
+	<!-- {#if $lives > 0}
 		<ul out:fade={{ duration: 500 }} class="rounded-box inline-flex bg-neutral py-3 px-5">
 			{#each Array($lives) as _, i (i)}
 				<li>
@@ -75,5 +76,5 @@
 				</li>
 			{/each}
 		</ul>
-	{/if}
+	{/if} -->
 </div>

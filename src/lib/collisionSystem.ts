@@ -16,10 +16,10 @@ export function circleCollision(
 	p2y: number,
 	r2: number
 ) {
-	const radiusSum: number = r1 + r2;
-	const xDiff: number = p1x - p2x;
-	const yDiff: number = p1y - p2y;
+	const radiusSum: number = (r1 + r2) ** 2;
+	const xDiff: number = (p1x - p2x) ** 2;
+	const yDiff: number = (p1y - p2y) ** 2;
 
-	if (radiusSum > Math.sqrt(xDiff * xDiff + yDiff * yDiff)) return true;
+	if (radiusSum > xDiff + yDiff) return true;
 	return false;
 }
