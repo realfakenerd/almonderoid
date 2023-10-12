@@ -1,5 +1,7 @@
 import type { Ship } from './objects';
 
+export const CANVAS_WIDTH = 640;
+export const CANVAS_HEIGHT = 480;
 
 export const random = (min: number, max: number) =>
 	((Math.random() * (max - min + 1)) & 0xffffffff) + min;
@@ -14,5 +16,19 @@ export function resetShip(ship: Ship) {
 	ship.velY = 0;
 }
 
-export const CANVAS_WIDTH = 640;
-export const CANVAS_HEIGHT = 480;
+
+/* Creating an enum of the arrow keys. */
+export const enum ArrowKeys {
+	up = 'ArrowUp',
+	left = 'ArrowLeft',
+	right = 'ArrowRight',
+	shoot = 's'
+}
+
+/* Creating an enum of the keyboard keys. */
+export const enum KBKeys {
+	up = 'w',
+	left = 'a',
+	right = 'd',
+	shoot = 's'
+}
