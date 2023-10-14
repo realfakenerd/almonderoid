@@ -1,5 +1,5 @@
 import { Asteroid, Ship } from "$lib/objects";
-import { isGameStarted, renderLoopId, stateGame, type StateGame } from "$lib/stores";
+import { isGamePaused, isGameStarted, renderLoopId, stateGame, type StateGame } from "$lib/stores";
 import { get } from "svelte/store";
 import canvasConfig from "./canvasConfig";
 import keysSystem from "./keysSystem";
@@ -7,39 +7,54 @@ import renderGame from "./renderGame";
 
 export function game() {
     const { canvas, ctx } = canvasConfig(document);
+    const {subscribeMoves, unSubscribeMoves} = keysSystem();
     const maxWave = 4;
-    const stateGameStart: StateGame = {
+    const stateGameDefault: StateGame = {
         ships: [],
         asteroids: [],
         bullets: []
     }
 
     function start() {
+        if (get(isGameStarted)) return;
+
         isGameStarted.set(true);
+        const newState = { ...stateGameDefault };
         const ship = new Ship(canvas, ctx);
 
-        stateGameStart.ships.push(ship);
+        newState.ships = [ship];
 
         for (let i = 0; i < maxWave; i++) {
-            stateGameStart.asteroids = [new Asteroid(canvas, ctx), ...stateGameStart.asteroids]
+            newState.asteroids = [new Asteroid(canvas, ctx), ...newState.asteroids]
         }
 
-        stateGame.set(stateGameStart);
+        stateGame.set(newState);
 
-        keysSystem()
-            .subscribeMoves();
+        subscribeMoves();
         renderGame();
     }
 
     function pause() {
+        isGamePaused.set(true);
         cancelAnimationFrame(get(renderLoopId));
+    }
+    
+    function continueGame() {
+        unSubscribeMoves();
+        isGamePaused.set(false);
+        subscribeMoves();
+        renderGame();
     }
 
     function reset() {
-        cancelAnimationFrame(get(renderLoopId));
-        stateGame.set({ships: [], asteroids: [], bullets: []});
-        console.log(get(stateGame))
+        if (!get(isGamePaused))
+            cancelAnimationFrame(get(renderLoopId));
+
+        isGamePaused.set(false);
+        isGameStarted.set(false);
+        unSubscribeMoves();
+        start();
     }
 
-    return { start, pause, reset }
+    return { start, pause, reset, continueGame }
 }
