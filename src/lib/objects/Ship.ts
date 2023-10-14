@@ -1,5 +1,6 @@
 import Base from './Base';
 import { CANVAS_HEIGHT, CANVAS_WIDTH } from '$lib/utils';
+import Bullet from './Bullet';
 
 /** We're creating a class called Ship that has a bunch of properties and methods that we can use to
 create a ship object */
@@ -13,6 +14,11 @@ export default class Ship extends Base {
 	noseX = CANVAS_WIDTH / 2 + 15;
 	noseY = CANVAS_HEIGHT / 2;
 	vertAngle = (Math.PI * 2) / 3;
+	bullets: Bullet[] = [];
+	fireInterval = 50;
+	lastFireTime = 0;
+	cadencyShoot = 100;
+	#fireTimeout: NodeJS.Timeout | undefined;
 
 	constructor(public canvas: HTMLCanvasElement, public ctx: CanvasRenderingContext2D) {
 		super(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, 0.04, 0);
@@ -53,7 +59,22 @@ export default class Ship extends Base {
 		this.velX = 0;
 		this.velY = 0;
 	}
+	shoot() {
+		const currentTime = Date.now();
 
+		if (currentTime - this.lastFireTime >= this.fireInterval) {
+			this.bullets = [new Bullet(this.angle, this.ctx, this), ...this.bullets]
+			this.#fireTimeout = setInterval(
+				() => this.bullets = [new Bullet(this.angle, this.ctx, this), ...this.bullets],
+				this.cadencyShoot
+			);
+		}
+		this.lastFireTime = currentTime;
+	}
+	stopShoot() {
+		clearInterval(this.#fireTimeout);
+		this.#fireTimeout = undefined;
+	}
 	/**
 	 * We're drawing a triangle with the nose of the triangle pointing in the direction of the ship's
 	 * angle
