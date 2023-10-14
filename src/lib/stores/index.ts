@@ -24,16 +24,17 @@ export const nameAcronym = writable('');
 export const lives = writable(0);
 export const isGameOver = writable(false);
 export const isGameStarted = writable(false);
+export const isGamePaused = writable(false);
 export const renderLoopId = writable<number>();
 
 export const score = writable(0);
 export const highScore = ls('highscore', 0);
 
 export const keyStore = ls<KeysDef>('settings', {
-	forwardKey: 'w',
-	leftKey: 'a',
-	rightKey: 'd',
-	shootKey: 'Space'
+	forwardKey: 'ArrowUp',
+	leftKey: 'ArrowLeft',
+	rightKey: 'ArrowRight',
+	shootKey: 's'
 });
 
 export const canvasStore = writable<HTMLCanvasElement>();
