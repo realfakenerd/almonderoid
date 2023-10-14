@@ -12,8 +12,6 @@ type Moves = {
 }
 
 export default function keysSystem() {
-    const { ships } = get(stateGame);
-    const ship = ships[0];
     const ctx = get(ctxStore);
     const { addEvents, removeEvents } = createKeyboardListener();
     const { forwardKey, leftKey, rightKey, shootKey } = get(keyStore);
@@ -21,6 +19,11 @@ export default function keysSystem() {
     const moves: Moves = {};
 
     const subscribeMoves = () => {
+        addEvents(handleKeydown, handleKeyup);
+
+        const { ships } = get(stateGame);
+        const ship = ships[0];
+
         moves[forwardKey] = () => {
             ship.movingForward = keys[forwardKey];
         };
@@ -43,7 +46,11 @@ export default function keysSystem() {
         if (forwardKey !== key && leftKey !== key && rightKey !== key && shootKey !== key) return;
 
         keys[key] = true;
-        moves[key]();
+
+        if (keys[forwardKey]) moves[forwardKey]();
+        if (keys[leftKey]) moves[leftKey]();
+        if (keys[rightKey]) moves[rightKey]();
+        if (keys[shootKey]) moves[shootKey]();
     }
     const handleKeyup = (key: string) => {
         if (forwardKey !== key && leftKey !== key && rightKey !== key && shootKey !== key) return;
@@ -53,10 +60,8 @@ export default function keysSystem() {
             moves[key]();
     }
 
-    addEvents(handleKeydown, handleKeyup);
-
     return {
-        removeEvents,
+        unSubscribeMoves: removeEvents,
         subscribeMoves
     }
 }
