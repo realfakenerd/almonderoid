@@ -12,8 +12,7 @@ export function game() {
     const { collisionChecking, cancelCollisionChecking } = collisionSystem();
     const stateGameDefault: StateGame = {
         ships: [],
-        asteroids: [],
-        bullets: []
+        asteroids: []
     }
 
     function start() {
@@ -53,7 +52,7 @@ export function game() {
         subscribeMoves();
         collisionChecking();
         renderGame();
-        
+
         isGamePaused.set(false);
     }
 
