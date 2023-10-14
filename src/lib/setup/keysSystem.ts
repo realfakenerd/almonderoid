@@ -1,7 +1,6 @@
 import { get } from "svelte/store";
 import createKeyboardListener from "./createKeyboardListener";
-import { ctxStore, keyStore, stateGame } from "$lib/stores";
-import { Bullet } from "$lib/objects";
+import { keyStore, stateGame } from "$lib/stores";
 
 type Keys = {
     [key: string]: boolean;
@@ -12,18 +11,15 @@ type Moves = {
 }
 
 export default function keysSystem() {
-    const ctx = get(ctxStore);
     const { addEvents, removeEvents } = createKeyboardListener();
     const { forwardKey, leftKey, rightKey, shootKey } = get(keyStore);
     const keys: Keys = {};
     const moves: Moves = {};
 
     const subscribeMoves = () => {
-        addEvents(handleKeydown, handleKeyup);
-
         const { ships } = get(stateGame);
         const ship = ships[0];
-
+        
         moves[forwardKey] = () => {
             ship.movingForward = keys[forwardKey];
         };
@@ -33,13 +29,15 @@ export default function keysSystem() {
         moves[rightKey] = () => {
             ship.rotate(1);
         }
+
         moves[shootKey] = () => {
-            stateGame.update(val => ({
-                ...val,
-                bullets: [new Bullet(ship.angle, ctx, ship), ...val.bullets]
-            }))
+            if (keys[shootKey])
+                ship.shoot();
+            else
+                ship.stopShoot();
         }
 
+        addEvents(handleKeydown, handleKeyup);
     }
 
     const handleKeydown = (key: string) => {
@@ -56,8 +54,10 @@ export default function keysSystem() {
         if (forwardKey !== key && leftKey !== key && rightKey !== key && shootKey !== key) return;
 
         keys[key] = false;
-        if (key === forwardKey)
+
+        if (key === forwardKey || key === shootKey)
             moves[key]();
+
     }
 
     return {
