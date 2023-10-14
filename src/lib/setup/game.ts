@@ -4,11 +4,12 @@ import { get } from "svelte/store";
 import canvasConfig from "./canvasConfig";
 import keysSystem from "./keysSystem";
 import renderGame from "./renderGame";
+import collisionSystem from "./collisionSystem";
 
 export function game() {
     const { canvas, ctx } = canvasConfig(document);
-    const {subscribeMoves, unSubscribeMoves} = keysSystem();
-    const maxWave = 4;
+    const { subscribeMoves, unSubscribeMoves } = keysSystem();
+    const { collisionChecking, cancelCollisionChecking } = collisionSystem();
     const stateGameDefault: StateGame = {
         ships: [],
         asteroids: [],
@@ -17,8 +18,8 @@ export function game() {
 
     function start() {
         if (get(isGameStarted)) return;
-
-        isGameStarted.set(true);
+        
+        const maxWave = 4;
         const newState = { ...stateGameDefault };
         const ship = new Ship(canvas, ctx);
 
@@ -31,19 +32,29 @@ export function game() {
         stateGame.set(newState);
 
         subscribeMoves();
+        collisionChecking();
         renderGame();
+        
+        isGameStarted.set(true);
     }
 
     function pause() {
+        const renderLoop = get(renderLoopId);
+        
+        cancelCollisionChecking();
+        unSubscribeMoves();
+        cancelAnimationFrame(renderLoop);
+
         isGamePaused.set(true);
-        cancelAnimationFrame(get(renderLoopId));
     }
     
     function continueGame() {
-        unSubscribeMoves();
-        isGamePaused.set(false);
+        
         subscribeMoves();
+        collisionChecking();
         renderGame();
+        
+        isGamePaused.set(false);
     }
 
     function reset() {
@@ -52,6 +63,8 @@ export function game() {
 
         isGamePaused.set(false);
         isGameStarted.set(false);
+
+        cancelCollisionChecking();
         unSubscribeMoves();
         start();
     }
