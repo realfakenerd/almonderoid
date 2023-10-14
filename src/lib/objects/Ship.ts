@@ -47,6 +47,12 @@ export default class Ship extends Base {
 		this.x -= this.velX;
 		this.y -= this.velY;
 	}
+	reset() {
+		this.x = CANVAS_WIDTH / 2;
+		this.y = CANVAS_HEIGHT / 2;
+		this.velX = 0;
+		this.velY = 0;
+	}
 
 	/**
 	 * We're drawing a triangle with the nose of the triangle pointing in the direction of the ship's
@@ -61,7 +67,7 @@ export default class Ship extends Base {
 
 		this.noseX = this.x - this.radius * cosR;
 		this.noseY = this.y - this.radius * sinR;
-		
+
 		let i = 0;
 		this.ctx.beginPath();
 		for (i; i < 3; i++) {
