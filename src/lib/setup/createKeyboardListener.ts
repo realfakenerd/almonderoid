@@ -1,11 +1,11 @@
-type Timers = {
+interface Timers {
     [key: string]: NodeJS.Timeout | undefined
-}
+};
 
 export default function createKeyboardListener() {
-    function addEvents(handleKeydown: (key: string) => void, handleKeyup: (key: string) => void) {
-        const timers: Timers = {};
+    const timers: Timers = {};
 
+    function addEvents(handleKeydown: (key: string) => void, handleKeyup: (key: string) => void) {
         document.onkeydown = (e: KeyboardEvent) => {
             const key = e.key.trim() ? e.key : e.code;
 
@@ -30,6 +30,12 @@ export default function createKeyboardListener() {
 
     }
     function removeEvents() {
+        for (const time in timers) {
+            clearInterval(timers[time]);
+            
+            delete timers[time];
+        }
+
         document.onkeydown = () => {
             return;
         };
