@@ -10,7 +10,7 @@ function drawObjects(objects: (Bullet | Asteroid)[]) {
 }
 
 export default function renderGame() {
-    const { ships, asteroids, bullets } = get(stateGame);
+    const { ships, asteroids } = get(stateGame);
     const canvas = get(Canvas)
     const ctx = get(Ctx)
 
@@ -20,15 +20,13 @@ export default function renderGame() {
         for (const ship of ships) {
             ship.update();
             ship.draw();
+
+            drawObjects(ship.bullets);
         }
     }
 
     if (asteroids.length > 0) {
         drawObjects(asteroids)
-    }
-
-    if (bullets.length > 0) {
-        drawObjects(bullets)
     }
 
     renderLoopId.set(requestAnimationFrame(renderGame));
