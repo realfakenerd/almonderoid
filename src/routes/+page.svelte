@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { game } from '$lib/setup/game';
-	import { highScore, isGameOver, score, lives, keyStore } from '$lib/stores';
+	import { highScore, isGameOver, score, lives, keyStore, isGamePaused } from '$lib/stores';
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 
@@ -8,6 +8,7 @@
 	let start: () => void;
 	let pause: () => void;
 	let reset: () => void;
+	let continueGame: () => void;
 	
 	onMount(() => {
 		const gameSettings = game();
@@ -15,7 +16,14 @@
 		start = gameSettings.start;
 		pause = gameSettings.pause;
 		reset = gameSettings.reset;
+		continueGame = gameSettings.continueGame;
 	})
+
+	
+	function handlePause() {
+		if(get(isGamePaused)) continueGame();
+		else pause();
+	}
 </script>
 
 <section class="flex flex-col w-full gap-y-2 p-2">
@@ -80,7 +88,7 @@
 </div>
 <div class="flex flex-col gap-y-2 w-full items-start justify-between">
 	<button class="btn border-2 border-primary" on:click={start}>Start Game</button>
-	<button class="btn border-2 border-primary" on:click={pause}>Pause</button>
+	<button class="btn border-2 border-primary" on:click={handlePause}>{$isGamePaused ? "Continue" : "Pause"}</button>
 	<button class="btn border-2 border-primary" on:click={reset}>RESET GAME</button>
 	<!-- {#if $lives > 0}
 		<ul out:fade={{ duration: 500 }} class="rounded-box inline-flex bg-neutral py-3 px-5">
