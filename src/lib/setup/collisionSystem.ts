@@ -6,7 +6,6 @@ export default function collisionSystem() {
     let timer: number;
 
     function isCollision(obj: Ship | Bullet, asteroid: Asteroid) {
-
         const radiusSum: number = (11 + asteroid.collisionRadius) ** 2;
         const xDiff: number = (obj.x - asteroid.x) ** 2;
         const yDiff: number = (obj.y - asteroid.y) ** 2;
@@ -15,7 +14,8 @@ export default function collisionSystem() {
     }
 
     function checkCollisions() {
-        const { ships, asteroids } = get(stateGame);
+        const state = get(stateGame)
+        const { ships, asteroids } = state;
         const [ship] = ships;
 
         for (const asteroid of asteroids) {
@@ -29,8 +29,7 @@ export default function collisionSystem() {
                     const filterAsteroids: Asteroid[] = asteroids.filter(a => a.x !== asteroid.x && a.y !== asteroid.y);
                     const filterBullets: Bullet[] = ship.bullets.filter(b => b.x !== bullet.x && b.y !== bullet.y);
 
-                    ship.bullets = filterBullets;
-
+                    
                     if (asteroid.level === 1) {
 
                         filterAsteroids.push(
@@ -45,11 +44,9 @@ export default function collisionSystem() {
                             new Asteroid(15, 3, 12, 2.5, asteroid.x, asteroid.y)
                         );
                     }
-
-                    stateGame.set({
-                        ships: [ship],
-                        asteroids: filterAsteroids
-                    });
+                    
+                    ship.bullets = filterBullets;
+                    state.asteroids = filterAsteroids;
                 }
             }
         }

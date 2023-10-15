@@ -9,25 +9,20 @@ import collisionSystem from "./collisionSystem";
 export function game() {
     const { subscribeMoves, unSubscribeMoves } = keysSystem();
     const { collisionChecking, cancelCollisionChecking } = collisionSystem();
-    const stateGameDefault: StateGame = {
-        ships: [],
-        asteroids: []
-    }
 
     function start() {
         if (get(isGameStarted)) return;
-
+        const state = get(stateGame);
         const maxWave = 4;
-        const newState = { ...stateGameDefault };
         const ship = new Ship();
 
-        newState.ships = [ship];
+        state.ships = [ship];
+        if (state.asteroids.length)
+            state.asteroids = [];
 
         for (let i = 0; i < maxWave; i++) {
-            newState.asteroids = [new Asteroid(), ...newState.asteroids]
+            state.asteroids = [new Asteroid(), ...state.asteroids]
         }
-
-        stateGame.set(newState);
 
         subscribeMoves();
         collisionChecking();
@@ -62,7 +57,7 @@ export function game() {
 
         stateGame.set({ asteroids: [], ships: [] });
     }
-    
+
     canvasConfig(document);
 
     return { start, pause, reset, continueGame }
