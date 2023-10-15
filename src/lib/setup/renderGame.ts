@@ -1,6 +1,11 @@
 import type { Asteroid, Bullet } from "$lib/objects";
-import { canvasStore as Canvas, ctxStore as Ctx, renderLoopId, stateGame } from "$lib/stores";
+import { canvasStore as Canvas, ctxStore as Ctx, stateGame } from "$lib/stores";
 import { get } from "svelte/store";
+
+type RenderGame = {
+    (): void;
+    stopRender: () => void;
+}
 
 function drawObjects(objects: (Bullet | Asteroid)[]) {
     for (const obj of objects) {
@@ -9,7 +14,9 @@ function drawObjects(objects: (Bullet | Asteroid)[]) {
     }
 }
 
-export default function renderGame() {
+let loopRender: number;
+
+export const renderGame: RenderGame = () => {
     const { ships, asteroids } = get(stateGame);
     const canvas = get(Canvas)
     const ctx = get(Ctx)
@@ -29,5 +36,11 @@ export default function renderGame() {
         drawObjects(asteroids)
     }
 
-    renderLoopId.set(requestAnimationFrame(renderGame));
+    loopRender = requestAnimationFrame(renderGame);
 }
+
+renderGame.stopRender = () => {
+    cancelAnimationFrame(loopRender);
+}
+
+export default renderGame;
