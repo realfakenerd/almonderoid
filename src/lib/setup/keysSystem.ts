@@ -42,8 +42,15 @@ export default function keysSystem() {
 
     const unSubscribeMoves = () => {
         const { ships } = get(stateGame);
-        const ship = ships[0];
+        const [ship] = ships;
 
+        ship.movingForward = false;
+
+        keys[forwardKey] = false
+        keys[leftKey] = false;
+        keys[rightKey] = false;
+        keys[shootKey] = false;
+        
         if (ship.fireInterval)
             ship.stopShoot();
         
