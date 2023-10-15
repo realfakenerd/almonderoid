@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { game } from '$lib/setup/game';
-	import { highScore, isGameOver, score, lives, keyStore, isGamePaused } from '$lib/stores';
+	import { highScore, isGameOver, score, lives, keyStore, isGamePaused, isGameStarted } from '$lib/stores';
 	import { onMount } from 'svelte';
 	import { get } from 'svelte/store';
 
@@ -56,6 +56,11 @@
 				<span class="text-3xl text-primary">GAME OVER</span>
 			</div>
 		{/if}
+		{#if $isGamePaused}
+			<div class="absolute top-1/2 left-1/2 -translate-x-1/2 transform">
+				<span class="text-3xl text-secondary">PAUSED</span>
+			</div>
+		{/if}
 		<!-- {#if !$isGameStarted}
 		<div
 			class="absolute top-1/2 transform left-1/2 
@@ -87,7 +92,7 @@
 	</div>
 </div>
 <div class="flex flex-col gap-y-2 w-full items-start justify-between">
-	<button class="btn border-2 border-primary" on:click={start}>Start Game</button>
+	<button class="btn border-2 border-primary" disabled={$isGameStarted} on:click={start}>Start Game</button>
 	<button class="btn border-2 border-primary" on:click={handlePause}>{$isGamePaused ? "Continue" : "Pause"}</button>
 	<button class="btn border-2 border-primary" on:click={reset}>RESET GAME</button>
 	<!-- {#if $lives > 0}
