@@ -1,5 +1,5 @@
 import { Asteroid, Ship } from "$lib/objects";
-import { isGamePaused, isGameStarted, stateGame, type StateGame } from "$lib/stores";
+import { isGamePaused, isGameStarted, stateGame } from "$lib/stores";
 import { get } from "svelte/store";
 import canvasConfig from "./canvasConfig";
 import keysSystem from "./keysSystem";
