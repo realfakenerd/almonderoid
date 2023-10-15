@@ -27,12 +27,20 @@ export const isGamePaused = writable(false);
 export const score = writable(0);
 export const highScore = ls('highscore', 0);
 
-export const keyStore = ls<KeysDef>('settings', {
+const arrowKeys = {
 	forwardKey: 'ArrowUp',
 	leftKey: 'ArrowLeft',
 	rightKey: 'ArrowRight',
 	shootKey: 's'
-});
+}
+
+const lettersKeys = {
+	forwardKey: 'w',
+	leftKey: 'a',
+	rightKey: 'd',
+	shootKey: 'Space'
+}
+export const keyStore = ls<KeysDef>('settings', lettersKeys);
 
 export const canvasStore = writable<HTMLCanvasElement>();
 export const ctxStore = writable<CanvasRenderingContext2D>();

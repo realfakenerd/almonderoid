@@ -7,7 +7,6 @@ import renderGame from "./renderGame";
 import collisionSystem from "./collisionSystem";
 
 export function game() {
-    const { canvas, ctx } = canvasConfig(document);
     const { subscribeMoves, unSubscribeMoves } = keysSystem();
     const { collisionChecking, cancelCollisionChecking } = collisionSystem();
     const stateGameDefault: StateGame = {
@@ -17,15 +16,15 @@ export function game() {
 
     function start() {
         if (get(isGameStarted)) return;
-        
+
         const maxWave = 4;
         const newState = { ...stateGameDefault };
-        const ship = new Ship(canvas, ctx);
+        const ship = new Ship();
 
         newState.ships = [ship];
 
         for (let i = 0; i < maxWave; i++) {
-            newState.asteroids = [new Asteroid(canvas, ctx), ...newState.asteroids]
+            newState.asteroids = [new Asteroid(), ...newState.asteroids]
         }
 
         stateGame.set(newState);
@@ -33,19 +32,20 @@ export function game() {
         subscribeMoves();
         collisionChecking();
         renderGame();
-        
+
         isGameStarted.set(true);
     }
 
     function pause() {
+        unSubscribeMoves();
         cancelCollisionChecking();
         renderGame.stopRender();
 
         isGamePaused.set(true);
     }
-    
+
     function continueGame() {
-        
+        subscribeMoves();
         collisionChecking();
         renderGame();
 
@@ -53,16 +53,17 @@ export function game() {
     }
 
     function reset() {
-        if (!get(isGamePaused))
-            renderGame.stopRender();
-
+        renderGame.stopRender(true);
         isGamePaused.set(false);
         isGameStarted.set(false);
 
         cancelCollisionChecking();
         unSubscribeMoves();
-        start();
+
+        stateGame.set({ asteroids: [], ships: [] });
     }
+    
+    canvasConfig(document);
 
     return { start, pause, reset, continueGame }
 }

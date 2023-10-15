@@ -1,5 +1,6 @@
+import { stateGame } from '$lib/stores';
+import { get } from 'svelte/store';
 import Base from './Base';
-import type Ship from './Ship';
 
 /** The Bullet class represents a bullet object with a specific position, size, velocity, and angle of
 rotation, and it can be updated and drawn on a canvas. */
@@ -15,7 +16,9 @@ export default class Bullet extends Base {
 	 * class
 	 * @param {number} angle - The angle of the rotation in degrees.
 	 */
-	constructor(angle: number, public ctx: CanvasRenderingContext2D, { noseX, noseY }: Ship) {
+	constructor() {
+		const [{noseX, noseY, angle}] = get(stateGame).ships;
+
 		super(noseX, noseY, 5, angle);
 		this.radians = (angle / Math.PI) * 180;
 	}

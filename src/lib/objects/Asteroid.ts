@@ -1,5 +1,7 @@
-import { CANVAS_HEIGHT, CANVAS_WIDTH, random } from '$lib/utils';
+import { canvasStore } from '$lib/stores';
+import { get } from 'svelte/store';
 import Base from './Base';
+import { random } from '$lib/utils';
 
 /** The Asteroid class represents an asteroid object in a game, with properties such as position,
 radius, level, collision radius, and speed, and methods for updating and drawing the asteroid. */
@@ -11,24 +13,37 @@ export default class Asteroid extends Base {
 	radians = (this.angle / Math.PI) * 180;
 	/**
 	 * The constructor function is used to create a new instance of the class
-	 * @param x - number = Math.floor(Math.random() * CANVAS_WIDTH),
-	 * @param y - number = Math.floor(Math.random() * CANVAS_HEIGHT),
+	 * @param x - number = Math.floor(Math.random() * this.canvasWidth),
+	 * @param y - number = Math.floor(Math.random() * this.canvasHeight),
 	 * @param [radius=50] - The radius of the circle.
 	 * @param [level=1] - The level of the enemy. This is used to determine the color of the enemy.
 	 * @param [collisionRadius=46] - The radius of the circle that will be used to detect collisions.
 	 * @param [speed=1.5] - The speed at which the enemy moves.
 	 */
 	constructor(
-		public canvas: HTMLCanvasElement,
-		public ctx: CanvasRenderingContext2D,
-		x = random(CANVAS_WIDTH, CANVAS_WIDTH * 2),
-		y = random(CANVAS_HEIGHT, CANVAS_HEIGHT * 2),
 		radius = 50,
 		level = 1,
 		collisionRadius = 46,
-		speed = 1.5
+		speed = 1.5,
+		x?: number,
+		y?: number
 	) {
-		super(x, y, speed, random(1, 20));
+		const canvas = get(canvasStore);
+
+		if (x && y)
+			super(
+				x,
+				y,
+				speed,
+				random(1, 20)
+			);
+		else
+			super(
+				random(canvas.width, canvas.width * 2),
+				random(canvas.height, canvas.height * 2),
+				speed,
+				random(1, 20)
+			);
 		this.radius = radius;
 		this.collisionRadius = collisionRadius;
 		this.level = level;
@@ -49,10 +64,10 @@ export default class Asteroid extends Base {
 	}
 
 	#wrapAroundCanvas() {
-		if (this.x < this.radius) this.x = CANVAS_WIDTH;
-		if (this.x > CANVAS_WIDTH) this.x = this.radius;
-		if (this.y < this.radius) this.y = CANVAS_HEIGHT;
-		if (this.y > CANVAS_HEIGHT) this.y = this.radius;
+		if (this.x < this.radius) this.x = this.canvasWidth;
+		if (this.x > this.canvasWidth) this.x = this.radius;
+		if (this.y < this.radius) this.y = this.canvasHeight;
+		if (this.y > this.canvasHeight) this.y = this.radius;
 	}
 
 	/**

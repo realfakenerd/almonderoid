@@ -4,7 +4,7 @@ import { get } from "svelte/store";
 
 type RenderGame = {
     (): void;
-    stopRender: () => void;
+    stopRender: (clear?: boolean) => void;
 }
 
 function drawObjects(objects: (Bullet | Asteroid)[]) {
@@ -14,14 +14,18 @@ function drawObjects(objects: (Bullet | Asteroid)[]) {
     }
 }
 
+
 let loopRender: number;
 
+function clearCanvas(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
 export const renderGame: RenderGame = () => {
     const { ships, asteroids } = get(stateGame);
-    const canvas = get(Canvas)
-    const ctx = get(Ctx)
+    const canvas = get(Canvas);
+    const ctx = get(Ctx);
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    clearCanvas(canvas, ctx);
 
     if (ships.length > 0) {
         for (const ship of ships) {
@@ -39,8 +43,13 @@ export const renderGame: RenderGame = () => {
     loopRender = requestAnimationFrame(renderGame);
 }
 
-renderGame.stopRender = () => {
+renderGame.stopRender = (clear = false) => {
+    const canvas = get(Canvas);
+    const ctx = get(Ctx);
+
     cancelAnimationFrame(loopRender);
+    if (clear)
+        clearCanvas(canvas, ctx);
 }
 
 export default renderGame;

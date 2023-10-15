@@ -19,15 +19,15 @@ export default function keysSystem() {
     const subscribeMoves = () => {
         const { ships } = get(stateGame);
         const ship = ships[0];
-        
+
         moves[forwardKey] = () => {
             ship.movingForward = keys[forwardKey];
         };
         moves[leftKey] = () => {
-            ship.rotate(-1);
+            ship.rotate({left: true});
         }
         moves[rightKey] = () => {
-            ship.rotate(1);
+            ship.rotate({right: true});
         }
 
         moves[shootKey] = () => {
@@ -38,6 +38,16 @@ export default function keysSystem() {
         }
 
         addEvents(handleKeydown, handleKeyup);
+    }
+
+    const unSubscribeMoves = () => {
+        const { ships } = get(stateGame);
+        const ship = ships[0];
+
+        if (ship.fireInterval)
+            ship.stopShoot();
+        
+        removeEvents();
     }
 
     const handleKeydown = (key: string) => {
@@ -61,7 +71,7 @@ export default function keysSystem() {
     }
 
     return {
-        unSubscribeMoves: removeEvents,
+        unSubscribeMoves,
         subscribeMoves
     }
 }
