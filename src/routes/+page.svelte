@@ -92,9 +92,9 @@
 	</div>
 </div>
 <div class="flex flex-col gap-y-2 w-full items-start justify-between">
-	<button class="btn border-2 border-primary" disabled={$isGameStarted} on:click={start}>Start Game</button>
-	<button class="btn border-2 border-primary" on:click={handlePause}>{$isGamePaused ? "Continue" : "Pause"}</button>
-	<button class="btn border-2 border-primary" on:click={reset}>RESET GAME</button>
+	<button class="btn border-2 border-primary" disabled={$isGameStarted} on:click={start}>START</button>
+	<button class="btn border-2 border-primary" disabled={!$isGameStarted} on:click={handlePause}>{$isGamePaused ? "CONTINUE" : "PAUSE"}</button>
+	<button class="btn border-2 border-primary" disabled={!$isGameStarted}  on:click={reset}>RESET</button>
 	<!-- {#if $lives > 0}
 		<ul out:fade={{ duration: 500 }} class="rounded-box inline-flex bg-neutral py-3 px-5">
 			{#each Array($lives) as _, i (i)}
