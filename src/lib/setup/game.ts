@@ -1,5 +1,5 @@
 import { Asteroid, Ship } from "$lib/objects";
-import { isGamePaused, isGameStarted, renderLoopId, stateGame, type StateGame } from "$lib/stores";
+import { isGamePaused, isGameStarted, stateGame, type StateGame } from "$lib/stores";
 import { get } from "svelte/store";
 import canvasConfig from "./canvasConfig";
 import keysSystem from "./keysSystem";
@@ -38,18 +38,14 @@ export function game() {
     }
 
     function pause() {
-        const renderLoop = get(renderLoopId);
-        
         cancelCollisionChecking();
-        unSubscribeMoves();
-        cancelAnimationFrame(renderLoop);
+        renderGame.stopRender();
 
         isGamePaused.set(true);
     }
     
     function continueGame() {
         
-        subscribeMoves();
         collisionChecking();
         renderGame();
 
@@ -58,7 +54,7 @@ export function game() {
 
     function reset() {
         if (!get(isGamePaused))
-            cancelAnimationFrame(get(renderLoopId));
+            renderGame.stopRender();
 
         isGamePaused.set(false);
         isGameStarted.set(false);
