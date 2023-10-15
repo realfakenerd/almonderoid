@@ -23,9 +23,6 @@ export const lives = writable(0);
 export const isGameOver = writable(false);
 export const isGameStarted = writable(false);
 export const isGamePaused = writable(false);
-export const renderLoopId = writable<number>();
-export const sensibilityMoves = writable<number>();
-export const sensibilityShoots = writable<number>();
 
 export const score = writable(0);
 export const highScore = ls('highscore', 0);
