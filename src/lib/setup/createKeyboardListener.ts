@@ -11,10 +11,11 @@ export default function createKeyboardListener() {
 
             if (!(key in timers)) {
                 timers[key] = undefined;
-                timers[key] = setInterval(() => handleKeydown(key), 25);
+
+                handleKeydown(key);
+                timers[key] = setInterval(() => handleKeydown(key), 10);
             }
 
-            handleKeydown(key);
         }
         document.onkeyup = (e: KeyboardEvent) => {
             const key = e.key.trim() ? e.key : e.code;
@@ -45,7 +46,7 @@ export default function createKeyboardListener() {
     };
 
     return {
-        addEvents,
+            addEvents,
         removeEvents
     }
 }
