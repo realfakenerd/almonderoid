@@ -1,5 +1,5 @@
 import { Asteroid, Ship } from "$lib/objects";
-import { isGamePaused, isGameStarted, stateGame } from "$lib/stores";
+import { isGamePaused, isGameStarted, lives, stateGame } from "$lib/stores";
 import { get } from "svelte/store";
 import canvasConfig from "./canvasConfig";
 import keysSystem from "./keysSystem";
@@ -23,6 +23,8 @@ export function game() {
         for (let i = 0; i < maxWave; i++) {
             state.asteroids = [new Asteroid(), ...state.asteroids]
         }
+        
+        lives.set(3);
 
         subscribeMoves();
         collisionChecking();
