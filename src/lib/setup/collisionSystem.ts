@@ -13,7 +13,7 @@ export default function collisionSystem() {
         return radiusSum > xDiff + yDiff;
     }
 
-    const collisionInterval = 100000;
+    const collisionInterval = 1000;
     let lastShipCollision = Date.now();
 
     function checkCollisions() {
