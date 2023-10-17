@@ -74,9 +74,9 @@ export default class Ship extends Base {
 	shoot() {
 		const currentTime = Date.now();
 
-
 		if (currentTime - this.lastFireTime >= this.fireInterval) {
 			this.bullets = [new Bullet(), ...this.bullets]
+			clearInterval(this.#fireTimeout);
 			this.#fireTimeout = setInterval(
 				() =>
 					this.bullets = [new Bullet(), ...this.bullets]
