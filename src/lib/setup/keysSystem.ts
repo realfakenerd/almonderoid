@@ -13,25 +13,25 @@ type Moves = {
 export default function keysSystem() {
     const { addEvents, removeEvents } = createKeyboardListener();
     const { forwardKey, leftKey, rightKey, shootKey } = get(keyStore);
-    const keys: Keys = {};
-    const moves: Moves = {};
+    const activeKeys: Keys = {};
+    const movesAccepted: Moves = {};
 
     const subscribeMoves = () => {
         const { ships } = get(stateGame);
-        const ship = ships[0];
+        const [ship] = ships;
 
-        moves[forwardKey] = () => {
-            ship.movingForward = keys[forwardKey];
+        movesAccepted[forwardKey] = () => {
+            ship.movingForward = activeKeys[forwardKey];
         };
-        moves[leftKey] = () => {
-            ship.rotate({left: true});
+        movesAccepted[leftKey] = () => {
+            ship.rotate({ left: true });
         }
-        moves[rightKey] = () => {
-            ship.rotate({right: true});
+        movesAccepted[rightKey] = () => {
+            ship.rotate({ right: true });
         }
 
-        moves[shootKey] = () => {
-            if (keys[shootKey])
+        movesAccepted[shootKey] = () => {
+            if (activeKeys[shootKey])
                 ship.shoot();
             else
                 ship.stopShoot();
@@ -46,34 +46,32 @@ export default function keysSystem() {
 
         ship.movingForward = false;
 
-        keys[forwardKey] = false
-        keys[leftKey] = false;
-        keys[rightKey] = false;
-        keys[shootKey] = false;
-        
+        activeKeys[forwardKey] = false
+        activeKeys[leftKey] = false;
+        activeKeys[rightKey] = false;
+        activeKeys[shootKey] = false;
+
         if (ship.fireInterval)
             ship.stopShoot();
-        
+
         removeEvents();
     }
 
     const handleKeydown = (key: string) => {
         if (forwardKey !== key && leftKey !== key && rightKey !== key && shootKey !== key) return;
 
-        keys[key] = true;
+        activeKeys[key] = true;
 
-        if (keys[forwardKey]) moves[forwardKey]();
-        if (keys[leftKey]) moves[leftKey]();
-        if (keys[rightKey]) moves[rightKey]();
-        if (keys[shootKey]) moves[shootKey]();
+        movesAccepted[key]()
+
     }
     const handleKeyup = (key: string) => {
         if (forwardKey !== key && leftKey !== key && rightKey !== key && shootKey !== key) return;
 
-        keys[key] = false;
+        activeKeys[key] = false;
 
         if (key === forwardKey || key === shootKey)
-            moves[key]();
+            movesAccepted[key]();
 
     }
 
