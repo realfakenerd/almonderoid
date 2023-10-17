@@ -21,22 +21,35 @@ export default class Asteroid extends Base {
 	 * @param [speed=1.5] - The speed at which the enemy moves.
 	 */
 	constructor(
-		radius = 50,
 		level = 1,
-		collisionRadius = 46,
-		speed = 1.5,
-		x?: number,
-		y?: number
+		asteroid?: Asteroid
 	) {
 		const canvas = get(canvasStore);
+		let speed = 1.5;
+		let radius = 50;
+		let collisionRadius = 46;
 
-		if (x && y)
+		if (level === 2) {
+			radius = 25;
+			collisionRadius = 22;
+			speed = 2;
+
+		} else if (level === 3) {
+			radius = 15;
+			collisionRadius = 12;
+			speed = 2.5;
+		}
+
+		if (asteroid) {
+			const { x, y } = asteroid;
+			
 			super(
 				x,
 				y,
 				speed,
 				random(1, 20)
 			);
+		}
 		else
 			super(
 				random(canvas.width, canvas.width * 2),
@@ -44,9 +57,12 @@ export default class Asteroid extends Base {
 				speed,
 				random(1, 20)
 			);
+
+
 		this.radius = radius;
 		this.collisionRadius = collisionRadius;
 		this.level = level;
+
 	}
 
 	/**
