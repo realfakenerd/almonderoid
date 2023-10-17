@@ -1,5 +1,5 @@
 import { Asteroid, type Bullet, type Ship } from "$lib/objects";
-import { stateGame } from "$lib/stores";
+import { lives, stateGame } from "$lib/stores";
 import { get } from "svelte/store";
 
 export default function collisionSystem() {
@@ -13,40 +13,48 @@ export default function collisionSystem() {
         return radiusSum > xDiff + yDiff;
     }
 
+    const collisionInterval = 100000;
+    let lastShipCollision = Date.now();
+
     function checkCollisions() {
         const state = get(stateGame)
         const { ships, asteroids } = state;
-        const [ship] = ships;
-
+        
+        const currentTime = Date.now(); 
         for (const asteroid of asteroids) {
+            for (const ship of ships) {
+                if (isCollision(ship, asteroid)) {
+                    if(currentTime - lastShipCollision >= collisionInterval) {
+                        console.log("choquei");
+                        lives.update(val => val - 1);
+                        lastShipCollision = Date.now();
+                        ship.reset();
+                    };
+                };
 
-            if (isCollision(ship, asteroid)) {
-                ship.reset();
-            };
+                for (const bullet of ship.bullets) {
+                    if (isCollision(bullet, asteroid)) {
+                        const filterAsteroids: Asteroid[] = asteroids.filter(a => a !== asteroid);
+                        const filterBullets: Bullet[] = ship.bullets.filter(b => b !== bullet);
 
-            for (const bullet of ship.bullets) {
-                if (isCollision(bullet, asteroid)) {
-                    const filterAsteroids: Asteroid[] = asteroids.filter(a => a.x !== asteroid.x && a.y !== asteroid.y);
-                    const filterBullets: Bullet[] = ship.bullets.filter(b => b.x !== bullet.x && b.y !== bullet.y);
+                        if (asteroid.level === 1) {
 
-                    
-                    if (asteroid.level === 1) {
+                            filterAsteroids.push(
+                                new Asteroid(2, asteroid),
+                                new Asteroid(2, asteroid)
+                            );
+                        }
+                        if (asteroid.level === 2) {
 
-                        filterAsteroids.push(
-                            new Asteroid(25, 2, 22, 2, asteroid.x, asteroid.y),
-                            new Asteroid(25, 2, 22, 2, asteroid.x, asteroid.y)
-                        );
+                            filterAsteroids.push(
+                                new Asteroid(3, asteroid),
+                                new Asteroid(3, asteroid)
+                            );
+                        }
+
+                        ship.bullets = filterBullets;
+                        state.asteroids = filterAsteroids;
                     }
-                    if (asteroid.level === 2) {
-
-                        filterAsteroids.push(
-                            new Asteroid(15, 3, 12, 2.5, asteroid.x, asteroid.y),
-                            new Asteroid(15, 3, 12, 2.5, asteroid.x, asteroid.y)
-                        );
-                    }
-                    
-                    ship.bullets = filterBullets;
-                    state.asteroids = filterAsteroids;
                 }
             }
         }
