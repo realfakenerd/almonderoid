@@ -1,10 +1,10 @@
 import { Asteroid, Ship } from "$lib/objects";
 import { isGamePaused, isGameStarted, lives, stateGame } from "$lib/stores";
 import { get } from "svelte/store";
-import canvasConfig from "./canvasConfig";
-import keysSystem from "./keysSystem";
-import renderGame from "./renderGame";
-import collisionSystem from "./collisionSystem";
+import canvasConfig from "./config/canvasConfig";
+import keysSystem from "./system/keysSystem";
+import renderGame from "./renderer/renderGame";
+import collisionSystem from "./system/collisionSystem";
 
 export function game() {
     const { subscribeMoves, unSubscribeMoves } = keysSystem();

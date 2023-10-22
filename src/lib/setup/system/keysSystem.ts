@@ -1,5 +1,5 @@
 import { get } from "svelte/store";
-import createKeyboardListener from "./createKeyboardListener";
+import createKeyboardListener from "../keyboard/createKeyboardListener";
 import { keyStore, stateGame } from "$lib/stores";
 
 type Keys = {

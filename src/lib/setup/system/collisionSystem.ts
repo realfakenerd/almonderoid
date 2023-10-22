@@ -27,7 +27,7 @@ export default function collisionSystem() {
                     if(currentTime - lastShipCollision >= collisionInterval) {
                         console.log("choquei");
                         lives.update(val => val - 1);
-                        lastShipCollision = Date.now();
+                        lastShipCollision = currentTime;
                         ship.reset();
                     };
                 };
