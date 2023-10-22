@@ -5,6 +5,7 @@ import canvasConfig from "./config/canvasConfig";
 import keysSystem from "./system/keysSystem";
 import renderGame from "./renderer/renderGame";
 import collisionSystem from "./system/collisionSystem";
+import { startMoves, stopMoves } from "./system/movesSystem";
 
 export function game() {
     const { subscribeMoves, unSubscribeMoves } = keysSystem();
@@ -28,12 +29,14 @@ export function game() {
 
         subscribeMoves();
         collisionChecking();
+        startMoves();
         renderGame();
-
+        
         isGameStarted.set(true);
     }
 
     function pause() {
+        stopMoves();
         unSubscribeMoves();
         cancelCollisionChecking();
         renderGame.stopRender();
@@ -44,16 +47,18 @@ export function game() {
     function continueGame() {
         subscribeMoves();
         collisionChecking();
+        startMoves();
         renderGame();
 
         isGamePaused.set(false);
     }
-
+    
     function reset() {
         renderGame.stopRender(true);
         isGamePaused.set(false);
         isGameStarted.set(false);
-
+        
+        stopMoves();
         cancelCollisionChecking();
         unSubscribeMoves();
 
