@@ -5,11 +5,12 @@ import canvasConfig from "./config/canvasConfig";
 import keysSystem from "./system/keysSystem";
 import renderGame from "./renderer/renderGame";
 import collisionSystem from "./system/collisionSystem";
-import { startMoves, stopMoves } from "./system/movesSystem";
+import movesSystem from "./system/movesSystem";
 
 export function game() {
     const { subscribeMoves, unSubscribeMoves } = keysSystem();
     const { collisionChecking, cancelCollisionChecking } = collisionSystem();
+    const { startMoves, stopMoves } = movesSystem();
 
     function start() {
         if (get(isGameStarted)) return;
@@ -18,8 +19,6 @@ export function game() {
         const ship = new Ship();
 
         state.ships = [ship];
-        if (state.asteroids.length)
-            state.asteroids = [];
 
         for (let i = 0; i < maxWave; i++) {
             state.asteroids = [new Asteroid(), ...state.asteroids]
@@ -54,6 +53,8 @@ export function game() {
     }
     
     function reset() {
+        const state = get(stateGame);
+
         renderGame.stopRender(true);
         isGamePaused.set(false);
         isGameStarted.set(false);
@@ -62,7 +63,8 @@ export function game() {
         cancelCollisionChecking();
         unSubscribeMoves();
 
-        stateGame.set({ asteroids: [], ships: [] });
+        state.asteroids = [];
+        state.ships = [];
     }
 
     canvasConfig(document);
