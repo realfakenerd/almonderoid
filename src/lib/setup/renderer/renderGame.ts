@@ -1,25 +1,20 @@
 import type { Asteroid, Bullet } from "$lib/objects";
 import { canvasStore as Canvas, ctxStore as Ctx, stateGame } from "$lib/stores";
 import { get } from "svelte/store";
-
-type RenderGame = {
-    (): void;
-    stopRender: (clear?: boolean) => void;
-}
+import type { RenderGame } from "./types";
 
 function drawObjects(objects: (Bullet | Asteroid)[]) {
     for (const obj of objects) {
-        obj.update();
         obj.draw();
     }
 }
 
-
-let loopRender: number;
-
 function clearCanvas(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
+
+let loopRender: number;
+
 export const renderGame: RenderGame = () => {
     const { ships, asteroids } = get(stateGame);
     const canvas = get(Canvas);
@@ -29,7 +24,6 @@ export const renderGame: RenderGame = () => {
 
     if (ships.length > 0) {
         for (const ship of ships) {
-            ship.update();
             ship.draw();
 
             drawObjects(ship.bullets);
