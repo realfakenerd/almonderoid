@@ -1,4 +1,5 @@
 import { Asteroid, type Bullet, type Ship } from "$lib/objects";
+import { Point } from "$lib/objects/Point";
 import { lives, stateGame } from "$lib/stores";
 import { get } from "svelte/store";
 
@@ -13,22 +14,22 @@ export default function collisionSystem() {
         return radiusSum > xDiff + yDiff;
     }
 
-    const collisionInterval = 1000;
+    const collisionInterval = 3000;
     let lastShipCollision = Date.now();
 
     function checkCollisions() {
         const state = get(stateGame)
         const { ships, asteroids } = state;
-        
-        const currentTime = Date.now(); 
+
+        const currentTime = Date.now();
         for (const asteroid of asteroids) {
             for (const ship of ships) {
                 if (isCollision(ship, asteroid)) {
-                    if(currentTime - lastShipCollision >= collisionInterval) {
-                        console.log("choquei");
+                    if (currentTime - lastShipCollision >= collisionInterval) {
                         lives.update(val => val - 1);
-                        lastShipCollision = currentTime;
                         ship.reset();
+
+                        lastShipCollision = currentTime;
                     };
                 };
 
@@ -52,6 +53,7 @@ export default function collisionSystem() {
                             );
                         }
 
+                        state.points = [new Point(asteroid), ...state.points]
                         ship.bullets = filterBullets;
                         state.asteroids = filterAsteroids;
                     }
