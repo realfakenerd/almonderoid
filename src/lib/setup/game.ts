@@ -1,5 +1,5 @@
 import { Ship } from "$lib/objects";
-import { isGamePaused, isGameStarted, lives, stateGame } from "$lib/stores";
+import { isGamePaused, isGameStarted, lives, score, stateGame } from "$lib/stores";
 import { get } from "svelte/store";
 import canvasConfig from "./config/canvasConfig";
 import renderGame from "./renderer/renderGame";
@@ -61,6 +61,7 @@ export function game() {
         stopMoves();
         cancelCollisionChecking();
         unSubscribeMoves();
+        score.set(0);
 
         state.asteroids = [];
         state.ships = [];
