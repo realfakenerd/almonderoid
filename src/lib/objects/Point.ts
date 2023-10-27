@@ -1,4 +1,4 @@
-import { ctxStore, score, stateGame } from "$lib/stores";
+import { ctxStore, highScore as highScoreStore, score as scoreStore, stateGame } from "$lib/stores";
 import { get } from "svelte/store";
 import type Asteroid from "./Asteroid";
 
@@ -10,23 +10,28 @@ export class Point {
 
     constructor(asteroid: Asteroid) {
         const ctx = get(ctxStore);
+        const highScore = get(highScoreStore);
         const { level, x, y } = asteroid;
 
         this.ctx = ctx;
-
+        
         this.x = x;
         this.y = y;
-
+        
         if (level === 1) {
             this.points = 10;
-            score.update(val => val + 10);
+            scoreStore.update(val => val + 10);
         } else if (level === 2) {
             this.points = 20
-            score.update(val => val + 20);
+            scoreStore.update(val => val + 20);
         } else {
             this.points = 30
-            score.update(val => val + 30);
+            scoreStore.update(val => val + 30);
         }
+        
+        const score = get(scoreStore);
+        if (score > highScore)
+            highScoreStore.set(score);
 
         setTimeout(
             () => {
