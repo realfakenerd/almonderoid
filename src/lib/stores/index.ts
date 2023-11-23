@@ -22,7 +22,7 @@ export const stateGame = writable<StateGame>({
 	points: []
 });
 export const nameAcronym = writable('');
-export const lives = writable(0);
+export const lives = writable(3);
 export const isGameOver = writable(false);
 export const isGameStarted = writable(false);
 export const isGamePaused = writable(false);

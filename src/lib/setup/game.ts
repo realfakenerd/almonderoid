@@ -1,10 +1,9 @@
 import { Ship } from "$lib/objects";
-import { isGamePaused, isGameStarted, lives, score, stateGame } from "$lib/stores";
+import { isGameOver, isGamePaused, isGameStarted, lives, score, stateGame } from "$lib/stores";
 import { get } from "svelte/store";
 import canvasConfig from "./config/canvasConfig";
 import renderGame from "./renderer/renderGame";
 import { collisionSystem, keysSystem, movesSystem, waveSystem } from "./system";
-
 
 export function game() {
     const { subscribeMoves, unSubscribeMoves } = keysSystem();
@@ -28,6 +27,7 @@ export function game() {
         startWaves();
         
         isGameStarted.set(true);
+        isGameOver.set(false);
     }
 
     function pause() {
@@ -62,11 +62,18 @@ export function game() {
         cancelCollisionChecking();
         unSubscribeMoves();
         score.set(0);
+        lives.set(3);
 
         state.asteroids = [];
         state.ships = [];
     }
 
+    lives.subscribe(live => {
+        if (live === 0) {
+            isGameOver.set(true);
+            reset();
+        }
+    });
     canvasConfig(document);
 
     return { start, pause, reset, continueGame }
