@@ -3,6 +3,7 @@
 	import '@fontsource/press-start-2p';
 	import { fly } from 'svelte/transition';
 	import { expoIn, expoOut } from 'svelte/easing';
+	
 	let { data, children } = $props();
 </script>
 
