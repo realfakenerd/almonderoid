@@ -1,10 +1,10 @@
 import { sveltekit } from '@sveltejs/kit/vite';
-import type { UserConfig } from 'vite';
+import { defineConfig } from 'vite';
 import viteCompression from 'vite-plugin-compression';
 
-const config = {
+export default defineConfig({
 	define: {
-		'process.env': {}
+		'process.env': '{}'
 	},
 	build: {
 		reportCompressedSize: false,
@@ -22,6 +22,4 @@ const config = {
 			}
 		})
 	]
-} satisfies UserConfig;
-
-export default config;
+});

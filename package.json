@@ -13,33 +13,117 @@
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. ."
 	},
 	"devDependencies": {
-		"@fontsource/press-start-2p": "^4.5.11",
-		"@playwright/test": "^1.37.1",
-		"@sveltejs/adapter-static": "next",
-		"@sveltejs/adapter-vercel": "^2.4.3",
-		"@sveltejs/kit": "^1.24.0",
-		"@typescript-eslint/eslint-plugin": "^5.62.0",
-		"@typescript-eslint/parser": "^5.62.0",
-		"autoprefixer": "^10.4.15",
-		"css-declaration-sorter": "^6.4.1",
-		"cssnano": "^5.1.15",
-		"daisyui": "^2.52.0",
-		"eslint": "^8.48.0",
-		"eslint-config-prettier": "^8.10.0",
+		"@fontsource/press-start-2p": "^5.2.7",
+		"@playwright/test": "^1.56.1",
+		"@sveltejs/adapter-static": "^3.0.10",
+		"@sveltejs/adapter-vercel": "^6.0.0",
+		"@sveltejs/kit": "^2.47.3",
+		"@sveltejs/vite-plugin-svelte": "^6.2.1",
+		"@typescript-eslint/eslint-plugin": "^8.46.2",
+		"@typescript-eslint/parser": "^8.46.2",
+		"autoprefixer": "^10.4.21",
+		"css-declaration-sorter": "^7.3.0",
+		"cssnano": "^7.1.1",
+		"daisyui": "^5.3.8",
+		"eslint": "^9.38.0",
+		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte3": "^4.0.0",
-		"postcss": "^8.4.29",
-		"prettier": "^2.8.8",
-		"prettier-plugin-svelte": "^2.10.1",
-		"prettier-plugin-tailwindcss": "^0.1.13",
-		"svelte": "^3.59.2",
-		"svelte-check": "^2.10.3",
-		"svelte-local-storage-store": "^0.2.6",
-		"svelte-preprocess": "^4.10.7",
-		"tailwindcss": "^3.3.3",
-		"tslib": "^2.6.2",
-		"typescript": "~4.6.4",
-		"vite": "^4.4.9",
+		"postcss": "^8.5.6",
+		"prettier": "^3.6.2",
+		"prettier-plugin-svelte": "^3.4.0",
+		"prettier-plugin-tailwindcss": "^0.7.1",
+		"svelte": "^5.41.2",
+		"svelte-check": "^4.3.3",
+		"svelte-local-storage-store": "^0.6.4",
+		"svelte-preprocess": "^6.0.3",
+		"tailwindcss": "^4.1.15",
+		"tslib": "^2.8.1",
+		"typescript": "~5.9.3",
+		"vite": "^7.1.11",
 		"vite-plugin-compression": "^0.5.1"
 	},
-	"type": "module"
+	"type": "module",
+	"exports": {
+		"./package.json": "./package.json",
+		"./collisionSystem": {
+			"types": "./package/collisionSystem.d.ts",
+			"default": "./package/collisionSystem.js"
+		},
+		"./components/Lives.svelte": {
+			"types": "./package/components/Lives.svelte.d.ts",
+			"svelte": "./package/components/Lives.svelte",
+			"default": "./package/components/Lives.svelte"
+		},
+		"./objects/Asteroid": {
+			"types": "./package/objects/Asteroid.d.ts",
+			"default": "./package/objects/Asteroid.js"
+		},
+		"./objects/Base": {
+			"types": "./package/objects/Base.d.ts",
+			"default": "./package/objects/Base.js"
+		},
+		"./objects/Bullet": {
+			"types": "./package/objects/Bullet.d.ts",
+			"default": "./package/objects/Bullet.js"
+		},
+		"./objects/Ship": {
+			"types": "./package/objects/Ship.d.ts",
+			"default": "./package/objects/Ship.js"
+		},
+		"./objects": {
+			"types": "./package/objects/index.d.ts",
+			"svelte": "./package/objects/index.js",
+			"default": "./package/objects/index.js"
+		},
+		"./setupGame": {
+			"types": "./package/setupGame.d.ts",
+			"default": "./package/setupGame.js"
+		},
+		"./stores": {
+			"types": "./package/stores/index.d.ts",
+			"svelte": "./package/stores/index.js",
+			"default": "./package/stores/index.js"
+		},
+		"./utils": {
+			"types": "./package/utils.d.ts",
+			"default": "./package/utils.js"
+		}
+	},
+	"files": [
+		"package"
+	],
+	"typesVersions": {
+		">4.0": {
+			"collisionSystem": [
+				"./package/collisionSystem.d.ts"
+			],
+			"components/Lives.svelte": [
+				"./package/components/Lives.svelte.d.ts"
+			],
+			"objects/Asteroid": [
+				"./package/objects/Asteroid.d.ts"
+			],
+			"objects/Base": [
+				"./package/objects/Base.d.ts"
+			],
+			"objects/Bullet": [
+				"./package/objects/Bullet.d.ts"
+			],
+			"objects/Ship": [
+				"./package/objects/Ship.d.ts"
+			],
+			"objects": [
+				"./package/objects/index.d.ts"
+			],
+			"setupGame": [
+				"./package/setupGame.d.ts"
+			],
+			"stores": [
+				"./package/stores/index.d.ts"
+			],
+			"utils": [
+				"./package/utils.d.ts"
+			]
+		}
+	}
 }

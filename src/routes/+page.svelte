@@ -63,7 +63,7 @@
 			height="460"
 			width="640"
 			id="game"
-		/>
+		></canvas>
 	</div>
 </div>
 <div class="flex flex-col gap-y-2 w-full items-start justify-between">

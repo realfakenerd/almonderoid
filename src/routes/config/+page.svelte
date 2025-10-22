@@ -1,12 +1,14 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 	import { goto } from '$app/navigation';
 	import { keyStore } from '$lib/stores';
-	const keys = {
+	const keys = $state({
 		forwardKey: '',
 		leftKey: '',
 		rightKey: '',
 		shootKey: ''
-	};
+	});
 
 	function setKey() {
 		keyStore.set({
@@ -20,7 +22,7 @@
 </script>
 
 <div class="w-1/2 mx-auto flex flex-col items-center">
-	<form class="space-y-2" on:submit|preventDefault={setKey}>
+	<form class="space-y-2" onsubmit={preventDefault(setKey)}>
 		<section class="form-control">
 			<label class="label" for="left">
 				<span class="label-text">left key</span>
